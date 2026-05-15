@@ -1,0 +1,5 @@
+{
+  "name": "project",
+  "description": "项目开发场景 — 开发日志、会议纪要、任务跟踪",
+  "modules": ["core", "project"]
+}

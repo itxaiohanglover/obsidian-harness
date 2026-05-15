@@ -1,0 +1,1 @@
+Audit and organize the Obsidian vault. Run the `vault-organize` skill to check naming conventions, detect structural issues, and generate/update MOC index notes. Ask the user what aspect they want to focus on (naming, structure, MOCs) or run a full audit.

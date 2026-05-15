@@ -1,0 +1,25 @@
+{
+  "name": "obsidian-harness",
+  "version": "0.1.0",
+  "description": "Curated Obsidian skills for Claude Code — workflow, organization, and knowledge management",
+  "bin": {
+    "obsidian-harness": "scripts/install.js"
+  },
+  "files": [
+    "modules/",
+    "profiles/",
+    "scripts/",
+    ".claude-plugin/",
+    "CLAUDE.md",
+    "skill-registry.json"
+  ],
+  "keywords": [
+    "obsidian",
+    "claude",
+    "claude-code",
+    "pkm",
+    "skills",
+    "knowledge-management"
+  ],
+  "license": "MIT"
+}

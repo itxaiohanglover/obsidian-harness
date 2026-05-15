@@ -1,0 +1,16 @@
+# CODEOWNERS - https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything
+* @xinhai
+
+# Install script changes need review
+scripts/ @xinhai
+
+# Skill definitions
+modules/ @xinhai
+
+# Profile configurations
+profiles/ @xinhai
+
+# Registry changes
+skill-registry.json @xinhai

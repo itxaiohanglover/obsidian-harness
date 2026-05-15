@@ -1,0 +1,5 @@
+{
+  "name": "learning",
+  "description": "学习备考场景 — 知识整理、笔记复习、测验",
+  "modules": ["core", "daily"]
+}

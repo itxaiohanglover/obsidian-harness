@@ -1,0 +1,114 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check install.js syntax
+        run: node --check scripts/install.js
+
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate SKILL.md frontmatter
+        run: |
+          errors=0
+          for f in $(find modules -name 'SKILL.md'); do
+            # Check required frontmatter fields
+            if ! grep -q '^name:' "$f"; then
+              echo "ERROR: $f missing 'name' in frontmatter"; errors=$((errors+1))
+            fi
+            if ! grep -q '^description:' "$f"; then
+              echo "ERROR: $f missing 'description' in frontmatter"; errors=$((errors+1))
+            fi
+          done
+          exit $errors
+
+  test-install:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        profile: [default, blogging, project, learning]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Create temp vault
+        run: mkdir -p /tmp/test-vault/.obsidian
+      - name: Test init with ${{ matrix.profile }}
+        run: node scripts/install.js init --vault /tmp/test-vault --profile ${{ matrix.profile }} --no-auto-deps
+      - name: Verify config
+        run: |
+          config=$(cat ~/.claude/obsidian-harness.json)
+          echo "$config" | grep '"profile": "${{ matrix.profile }}"'
+          echo "$config" | grep '"skills"'
+      - name: Verify vault marker
+        run: cat /tmp/test-vault/.obsidian-harness.json | grep '"profile": "${{ matrix.profile }}"'
+      - name: Verify symlinks
+        run: |
+          if [ ! -d ~/.claude/skills ]; then
+            echo "ERROR: skills dir not created"; exit 1
+          fi
+          if [ ! -d ~/.claude/commands ]; then
+            echo "ERROR: commands dir not created"; exit 1
+          fi
+
+  test-switch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Init default
+        run: |
+          mkdir -p /tmp/test-vault/.obsidian
+          node scripts/install.js init --vault /tmp/test-vault --no-auto-deps
+      - name: Switch to blogging
+        run: node scripts/install.js switch blogging --no-auto-deps
+      - name: Switch to project
+        run: node scripts/install.js switch project --no-auto-deps
+      - name: Switch back to default
+        run: node scripts/install.js switch default --no-auto-deps
+      - name: Verify final state
+        run: cat ~/.claude/obsidian-harness.json | grep '"profile": "default"'
+
+  test-errors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Unknown subcommand should fail
+        run: |
+          if node scripts/install.js oops 2>/dev/null; then
+            echo "ERROR: should have failed"; exit 1
+          fi
+      - name: Unknown profile should fail
+        run: |
+          if node scripts/install.js init --vault /tmp/x --profile nonexistent --no-auto-deps 2>/dev/null; then
+            echo "ERROR: should have failed"; exit 1
+          fi
+      - name: Switch without init should fail
+        run: |
+          rm -f ~/.claude/obsidian-harness.json
+          if node scripts/install.js switch blogging 2>/dev/null; then
+            echo "ERROR: should have failed"; exit 1
+          fi
