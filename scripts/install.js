@@ -73,8 +73,10 @@ function loadProfile(profileName) {
 function deployProfile(profileName) {
   const sourceDir = path.join(PROFILES_DIR, profileName);
   const sourceProfileMd = path.join(sourceDir, "profile.md");
+  const sourcePromptJson = path.join(sourceDir, "prompt.json");
   fs.mkdirSync(ACTIVE_PROFILE_DIR, { recursive: true });
   const destProfileMd = path.join(ACTIVE_PROFILE_DIR, "profile.md");
+  const destPromptJson = path.join(ACTIVE_PROFILE_DIR, "prompt.json");
 
   if (fs.existsSync(destProfileMd)) {
     console.log(`  ℹ User profile already exists, keeping it`);
@@ -82,6 +84,16 @@ function deployProfile(profileName) {
     fs.copyFileSync(sourceProfileMd, destProfileMd);
     console.log(`  ✓ profile: deployed to ${destProfileMd}`);
     console.log(`  ⚠ Please edit profile.md to fill in your Obsidian usage habits`);
+  }
+
+  // Always deploy prompt.json (users may edit it to customize skill prompts)
+  if (fs.existsSync(sourcePromptJson)) {
+    if (fs.existsSync(destPromptJson)) {
+      console.log(`  ℹ prompt.json already exists, keeping user customizations`);
+    } else {
+      fs.copyFileSync(sourcePromptJson, destPromptJson);
+      console.log(`  ✓ prompt.json: deployed to ${destPromptJson}`);
+    }
   }
 }
 

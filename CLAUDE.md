@@ -14,6 +14,18 @@ The active profile is stored at `~/.claude/obsidian-harness/active-profile/profi
 
 If the profile does not exist or is incomplete, ask the user to fill it in. You can find profile templates in `profiles/<name>/profile.md`.
 
+## Scene-specific prompts (prompt.json)
+
+**After reading the profile, check if there are scene-specific prompts for the skill you're about to use.**
+
+The file `~/.claude/obsidian-harness/active-profile/prompt.json` maps skill names to custom prompts. Before executing any skill:
+
+1. Read `prompt.json`
+2. If the skill name has an entry, prepend that prompt to the skill's default instructions
+3. If no entry exists, use the skill's default behavior
+
+Users can edit `prompt.json` to customize how each skill behaves in their current scene.
+
 Users can switch profiles at any time:
 ```bash
 npx obsidian-harness switch blogging   # seconds, no reinstall
@@ -47,3 +59,4 @@ The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vau
 | `/review` | daily | Generate weekly/monthly review |
 | `/project` | project | Create a project note |
 | `/profile` | core | Switch active profile (no restart needed) |
+| `/onboarding` | core | Guided tour for new users |
