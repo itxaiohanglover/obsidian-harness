@@ -59,7 +59,8 @@ jobs:
           echo "$config" | grep '"profile": "${{ matrix.profile }}"'
           echo "$config" | grep '"skills"'
       - name: Verify vault marker
-        run: cat /tmp/test-vault/.obsidian-harness.json | grep '"profile": "${{ matrix.profile }}"'
+        run: |
+          cat /tmp/test-vault/.obsidian-harness.json | grep '"profile": "${{ matrix.profile }}"'
       - name: Verify symlinks
         run: |
           if [ ! -d ~/.claude/skills ]; then
@@ -87,7 +88,8 @@ jobs:
       - name: Switch back to default
         run: node scripts/install.js switch default --no-auto-deps
       - name: Verify final state
-        run: cat ~/.claude/obsidian-harness.json | grep '"profile": "default"'
+        run: |
+          cat ~/.claude/obsidian-harness.json | grep '"profile": "default"'
 
   test-errors:
     runs-on: ubuntu-latest
