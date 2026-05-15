@@ -60,3 +60,4 @@ The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vau
 | `/project` | project | Create a project note |
 | `/profile` | core | Switch active profile (no restart needed) |
 | `/onboarding` | core | Guided tour for new users |
+| `/status` | core | Vault dashboard overview |
