@@ -432,6 +432,69 @@ function cmdListProfiles() {
   console.log("Custom: Create a directory under profiles/ with config.json + profile.md\n");
 }
 
+function cmdDashboard() {
+  const config = loadConfig();
+  if (!config) {
+    console.error("Error: Not installed yet. Run `obsidian-harness init` first.");
+    process.exit(1);
+  }
+  const vaultPath = config.vault;
+  const profileName = config.profile || "unknown";
+
+  // Count notes
+  let totalNotes = 0;
+  let dailyNotes = 0;
+  let lastDaily = "none";
+  const tags = new Set();
+
+  function scanDir(dir) {
+    if (!fs.existsSync(dir)) return;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name.startsWith(".") || entry.name === ".obsidian" || entry.name === ".agents") continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory() && entry.name === "Daily") {
+        // Count daily notes in Daily/ folder
+        if (fs.existsSync(full)) {
+          for (const f of fs.readdirSync(full)) {
+            if (f.endsWith(".md")) { dailyNotes++; totalNotes++; }
+          }
+        }
+      } else if (entry.isDirectory()) {
+        scanDir(full);
+      } else if (entry.name.endsWith(".md")) {
+        totalNotes++;
+        // Check if it's a daily note (YYYY-MM-DD.md)
+        if (/^\d{4}-\d{2}-\d{2}\.md$/.test(entry.name)) {
+          dailyNotes++;
+          lastDaily = entry.name.replace(".md", "");
+        }
+        // Extract tags
+        try {
+          const content = fs.readFileSync(full, "utf-8");
+          const tagMatch = content.match(/^tags:\s*\[([^\]]*)\]/m);
+          if (tagMatch) tagMatch[1].split(",").forEach((t) => tags.add(t.trim()));
+        } catch {}
+      }
+    }
+  }
+  scanDir(vaultPath);
+
+  // Check harness version
+  let harnessVersion = "unknown";
+  const markerPath = path.join(vaultPath, ".obsidian-harness.json");
+  if (fs.existsSync(markerPath)) {
+    try { harnessVersion = JSON.parse(fs.readFileSync(markerPath, "utf-8")).harnessVersion || "unknown"; } catch {}
+  }
+
+  const vaultName = path.basename(vaultPath);
+  console.log(`📊 Vault: ${vaultName}\n`);
+  console.log(`📁 ${totalNotes} notes | ${tags.size} tags | ${dailyNotes} daily notes`);
+  console.log(`📅 Last daily: ${lastDaily}`);
+  console.log(`🔧 Profile: ${profileName}`);
+  console.log(`📦 Harness: v${harnessVersion}`);
+  console.log(`\nQuick actions: /daily /organize /review /process /dashboard /memory`);
+}
+
 function cmdRecommend() {
   const registry = loadRegistry();
   const categories = {};
@@ -473,6 +536,8 @@ function main() {
     cmdListProfiles();
   } else if (subcommand === "--recommend") {
     cmdRecommend();
+  } else if (subcommand === "dashboard") {
+    cmdDashboard();
   } else if (subcommand === "--help" || subcommand === "-h") {
     showHelp();
   } else {

@@ -61,7 +61,7 @@ The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vau
 | `/process` | core | Read recent vault changes, analyze and organize |
 | `/profile` | core | Switch active profile (no restart needed) |
 | `/onboarding` | core | Guided tour for new users |
-| `/status` | core | Vault dashboard overview |
+| `/dashboard` | core | Vault dashboard overview |
 | `/memory` | core | View or update user habits and preferences |
 
 ## Natural language intent routing
@@ -76,7 +76,7 @@ The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vau
 | "看看这周干了啥", "weekly review", "这周总结" | `/review` |
 | "写好了", "帮我整理", "process these", "帮我看看" | `/process` |
 | "切换场景", "switch profile", "换个场景" | `/profile` |
-| "vault 状态", "笔记库怎么样" | `/status` |
+| "vault 状态", "笔记库怎么样" | `/dashboard` |
 | "记住", "我的习惯", "我偏好" | `/memory` |
 
 If the user's intent doesn't match any command, just help them directly — don't force a command.

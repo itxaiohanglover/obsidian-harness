@@ -32,8 +32,9 @@ obsidian-harness        →  工作流层（怎么整理 vault、管理日记、
 | "建个项目笔记" | 创建结构化项目 `/project` |
 | "看看这周干了啥" | 生成周报 `/review` |
 | "切换场景" | 切换 profile `/profile` |
+| "vault 状态" | 查看 vault 概览 `/dashboard` |
 
-也可以直接用斜杠命令：`/daily`、`/organize`、`/project`、`/review`、`/profile`。
+也可以直接用斜杠命令：`/daily`、`/organize`、`/project`、`/review`、`/profile`、`/dashboard`。
 
 ## 场景（Profiles）
 
