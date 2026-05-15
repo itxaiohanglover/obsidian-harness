@@ -49,16 +49,99 @@ obsidian-harness        →  工作流层（怎么整理 vault、管理日记、
 
 ### 自定义场景
 
-在 `profiles/` 下新建目录，添加 `config.json` 和 `profile.md`：
+在 `profiles/` 下新建目录，添加 `config.json`、`profile.md` 和 `prompt.json`：
 
 ```
 profiles/
-└── my-writing/
+└── writing-book/
     ├── config.json      # { "modules": ["core", "daily"] }
-    └── profile.md       # 你的使用习惯描述
+    ├── profile.md       # 场景画像：风格、习惯、偏好
+    └── prompt.json      # skill → 专属 prompt 映射
 ```
 
-然后告诉 Claude：`帮我切换到 my-writing 场景`。
+- `profile.md`：自然语言描述你的习惯，Claude 每次执行前会先读它
+- `prompt.json`：给特定 skill 注入专属提示词，让同一 skill 在不同场景下表现不同
+
+然后告诉 Claude：`帮我切换到 writing-book 场景`。
+
+## 最佳实践：多 Vault 工作流
+
+如果你同时进行多种写作（写书、写博客、写专利、写项目文档），推荐的做法是**一个 Vault 做一件事，一个终端只管一个 Vault**：
+
+### 步骤 1：为每种用途创建独立 Vault
+
+```
+~/vaults/
+├── my-book/          # 写书专用
+├── my-blog/          # 博客专用
+├── my-patent/        # 专利专用
+├── my-project/       # 项目文档专用
+└── my-learning/      # 学习笔记专用
+```
+
+每个目录下都有 `.obsidian/`，在 Obsidian 中分别打开。
+
+### 步骤 2：打开多个终端，分别进入对应目录
+
+```
+终端 1: cd ~/vaults/my-book && claude
+终端 2: cd ~/vaults/my-blog && claude
+终端 3: cd ~/vaults/my-patent && claude
+终端 4: cd ~/vaults/my-project && claude
+```
+
+### 步骤 3：每个终端安装并切换到对应场景
+
+```
+# 终端 1（写书）
+请帮我安装 obsidian-harness，然后切换到 writing-book 场景
+
+# 终端 2（博客）
+请帮我安装 obsidian-harness，然后切换到 blogging 场景
+
+# 终端 3（专利）
+请帮我安装 obsidian-harness，然后切换到 patent 场景
+```
+
+### 步骤 4：定制每个 Vault 的行为
+
+每个 Vault 的 `prompt.json` 可以注入不同的风格：
+
+```json
+// ~/vaults/my-book 的 prompt.json
+{
+  "daily-workflow": "聚焦今日写作进度，记录章节推进和思路",
+  "project-notes": "按章节结构组织，使用学术引用风格",
+  "mermaid-visualizer": "正式技术架构图，深色主题"
+}
+```
+
+```json
+// ~/vaults/my-blog 的 prompt.json
+{
+  "daily-workflow": "记录今日写作灵感和素材收集",
+  "project-notes": "按文章系列组织，使用轻松的语气"
+}
+```
+
+### 步骤 5：越用越好
+
+告诉 Claude 你的偏好，它会记住：
+
+```
+记住我喜欢用中文写笔记，技术术语用英文
+记住"搞一下"的意思是深度分析和整理
+记住我的常用流程是：收集素材 → 整理大纲 → 写作 → 画图
+```
+
+用 `/memory` 随时查看和更新你的偏好。
+
+### 为什么这样做？
+
+- **互不干扰**：每个 Vault 的模板、标签、索引完全独立
+- **一次切换，永久生效**：每个终端只切一次 profile，后续直接用
+- **自然积累**：每个 Vault 的记忆和偏好独立进化，越用越精准
+- **灵活定制**：通过 `prompt.json` 和 `profile.md` 让同一个 skill 在不同 Vault 表现不同
 
 ## 技能列表
 
