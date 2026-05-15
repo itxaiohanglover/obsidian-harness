@@ -37,13 +37,13 @@ function resolveVaultPath(flag) {
     }
     return p;
   }
-  // 2. Saved config
-  const config = loadConfig();
-  if (config && config.vault) return config.vault;
-  // 3. Auto-detect .obsidian/ in cwd
+  // 2. Auto-detect .obsidian/ in cwd (takes priority over saved config)
   if (fs.existsSync(path.join(process.cwd(), ".obsidian"))) {
     return process.cwd();
   }
+  // 3. Saved config (fallback when cwd is not a vault)
+  const config = loadConfig();
+  if (config && config.vault) return config.vault;
   return null;
 }
 
