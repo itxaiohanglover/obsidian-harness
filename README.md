@@ -23,29 +23,29 @@ obsidian-harness        →  工作流层（怎么整理 vault、管理日记、
 
 ## 装完怎么用？
 
-安装完成后，在 Claude Code 里直接说你想做什么：
+只需要记住 3 个命令，靠情绪驱动：
 
-| 你说的话 | Claude 会做什么 |
-|---------|----------------|
-| "今天的日记" | 创建今日日记 `/daily` |
-| "整理一下笔记库" | 审计并整理 vault `/organize` |
-| "建个项目笔记" | 创建结构化项目 `/project` |
-| "看看这周干了啥" | 生成周报 `/review` |
-| "切换场景" | 切换 profile `/profile` |
-| "vault 状态" | 查看 vault 概览 `/dashboard` |
+| 命令 | 你心里想的 | Claude 干什么 |
+|------|-----------|-------------|
+| `/ok` | "我改好了，你继续" | 读取 Obsidian 变更，接着上次的活干 |
+| `/fuck` | "这什么鬼，帮我搞" | 自动判断：整理 / 理思路 / 结构化 |
+| `/gun xxx` | "滚到 xxx 场景去" | 切换 profile，加载专属命令 |
 
-也可以直接用斜杠命令：`/daily`、`/organize`、`/project`、`/review`、`/profile`、`/dashboard`。
+不用记更多了。其他的都自然说：
+- "今天的日记" → 自动创建日记
+- "记住我喜欢用中文写笔记" → 自动存到记忆
+- "这周干了啥" → 自动生成周报
 
 ## 场景（Profiles）
 
-内置 4 个场景，用 `/profile` 切换：
+每个场景有自己的命令和风格。`/gun xxx` 切换：
 
-| 场景 | 说明 |
-|------|------|
-| `default` | 全能型笔记库管理 |
-| `blogging` | 博客写作、素材收集 |
-| `project` | 软件开发项目、开发日志 |
-| `learning` | 学习备考、知识整理 |
+| 场景 | 说明 | 加载的额外命令 |
+|------|------|--------------|
+| `default` | 全能型笔记库 | `/organize` `/daily` `/review` `/project` |
+| `blogging` | 博客写作 | `/organize` `/daily` `/review` |
+| `project` | 项目开发 | `/organize` `/project` |
+| `learning` | 学习备考 | `/organize` `/daily` `/review` |
 
 ### 自定义场景
 
@@ -59,14 +59,11 @@ profiles/
     └── prompt.json      # skill → 专属 prompt 映射
 ```
 
-- `profile.md`：自然语言描述你的习惯，Claude 每次执行前会先读它
-- `prompt.json`：给特定 skill 注入专属提示词，让同一 skill 在不同场景下表现不同
-
-然后告诉 Claude：`帮我切换到 writing-book 场景`。
+切过去：`/gun writing-book`
 
 ## 最佳实践：多 Vault 工作流
 
-如果你同时进行多种写作（写书、写博客、写专利、写项目文档），推荐的做法是**一个 Vault 做一件事，一个终端只管一个 Vault**：
+如果你同时进行多种写作（写书、写博客、写专利、写项目文档），推荐**一个 Vault 做一件事，一个终端只管一个 Vault**：
 
 ### 步骤 1：为每种用途创建独立 Vault
 
@@ -78,8 +75,6 @@ profiles/
 ├── my-project/       # 项目文档专用
 └── my-learning/      # 学习笔记专用
 ```
-
-每个目录下都有 `.obsidian/`，在 Obsidian 中分别打开。
 
 ### 步骤 2：打开多个终端，分别进入对应目录
 
@@ -94,33 +89,24 @@ profiles/
 
 ```
 # 终端 1（写书）
-请帮我安装 obsidian-harness，然后切换到 writing-book 场景
+/gun writing-book
 
 # 终端 2（博客）
-请帮我安装 obsidian-harness，然后切换到 blogging 场景
+/gun blogging
 
 # 终端 3（专利）
-请帮我安装 obsidian-harness，然后切换到 patent 场景
+/gun patent
 ```
 
 ### 步骤 4：定制每个 Vault 的行为
 
-每个 Vault 的 `prompt.json` 可以注入不同的风格：
+每个 Vault 的 `prompt.json` 注入不同风格：
 
 ```json
 // ~/vaults/my-book 的 prompt.json
 {
   "daily-workflow": "聚焦今日写作进度，记录章节推进和思路",
-  "project-notes": "按章节结构组织，使用学术引用风格",
   "mermaid-visualizer": "正式技术架构图，深色主题"
-}
-```
-
-```json
-// ~/vaults/my-blog 的 prompt.json
-{
-  "daily-workflow": "记录今日写作灵感和素材收集",
-  "project-notes": "按文章系列组织，使用轻松的语气"
 }
 ```
 
@@ -134,14 +120,11 @@ profiles/
 记住我的常用流程是：收集素材 → 整理大纲 → 写作 → 画图
 ```
 
-用 `/memory` 随时查看和更新你的偏好。
-
 ### 为什么这样做？
 
-- **互不干扰**：每个 Vault 的模板、标签、索引完全独立
-- **一次切换，永久生效**：每个终端只切一次 profile，后续直接用
-- **自然积累**：每个 Vault 的记忆和偏好独立进化，越用越精准
-- **灵活定制**：通过 `prompt.json` 和 `profile.md` 让同一个 skill 在不同 Vault 表现不同
+- **互不干扰**：每个 Vault 独立进化
+- **一次切换，永久生效**：每个终端只 `/gun` 一次
+- **越用越懂你**：每个 Vault 的记忆独立积累
 
 ## 技能列表
 

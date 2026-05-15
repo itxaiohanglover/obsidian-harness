@@ -1,1 +1,0 @@
-Switch the active Obsidian skill profile. Run `npx obsidian-harness profiles` to list available profiles, then `npx obsidian-harness switch <name>` to switch. Show the user the available profiles and current active profile (from ~/.claude/obsidian-harness.json), let them pick one, and execute the switch.

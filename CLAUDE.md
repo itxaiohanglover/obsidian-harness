@@ -26,11 +26,6 @@ The file `~/.claude/obsidian-harness/active-profile/prompt.json` maps skill name
 
 Users can edit `prompt.json` to customize how each skill behaves in their current scene.
 
-Users can switch profiles at any time:
-```bash
-npx obsidian-harness switch blogging   # seconds, no reinstall
-```
-
 ## Vault path
 
 The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vault path is remembered — no need to pass `--vault` again. If cwd contains `.obsidian/`, vault is auto-detected.
@@ -50,7 +45,15 @@ The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vau
 | daily | daily-workflow | Daily notes, task rollover, reviews |
 | project | project-notes | Project notes, dev logs, meeting minutes |
 
-## Commands
+## Atomic commands (always available)
+
+| Command | What user means | What to do |
+|---------|----------------|------------|
+| `/ok` | "I'm back, continue" | Detect vault changes since last interaction, continue working |
+| `/fuck` | "This is a mess, fix it" | Auto-diagnose: organize / untangle / restructure / split |
+| `/gun <name>` | "Switch to scene" | Switch profile, load scene-specific commands |
+
+## Profile-loaded commands (available when module is included)
 
 | Command | Module | Description |
 |---------|--------|-------------|
@@ -58,35 +61,20 @@ The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vau
 | `/daily` | daily | Create or open today's daily note |
 | `/review` | daily | Generate weekly/monthly review |
 | `/project` | project | Create a project note |
-| `/process` | core | Read recent vault changes, analyze and organize |
-| `/profile` | core | Switch active profile (no restart needed) |
-| `/onboarding` | core | Guided tour for new users |
-| `/dashboard` | core | Vault dashboard overview |
-| `/memory` | core | View or update user habits and preferences |
 
 ## Natural language intent routing
 
-**Users should NOT need to memorize commands.** When the user speaks naturally, match their intent to the right command:
+**Users should NOT need to memorize commands.** When the user speaks naturally, match their intent:
 
 | User might say | Route to |
 |---------------|----------|
-| "今天的日记", "today's note", "daily note" | `/daily` |
-| "整理笔记库", "clean up", "organize" | `/organize` |
-| "建个项目", "create project", "new project" | `/project` |
-| "看看这周干了啥", "weekly review", "这周总结" | `/review` |
-| "写好了", "帮我整理", "process these", "帮我看看" | `/process` |
-| "切换场景", "switch profile", "换个场景" | `/profile` |
-| "vault 状态", "笔记库怎么样" | `/dashboard` |
-| "记住", "我的习惯", "我偏好" | `/memory` |
+| "我改好了", "继续", "我回来了", "好了" | `/ok` |
+| "这什么鬼", "帮我整理", "太乱了", "搞一下" | `/fuck` |
+| "滚到xxx", "切到xxx", "换个场景" | `/gun xxx` |
+| "记住", "我的习惯是" | Save to prompt.json `_memory` |
 
 If the user's intent doesn't match any command, just help them directly — don't force a command.
 
 ## Proactive suggestions
 
-After completing any action, briefly consider if a follow-up would be helpful:
-- After `/daily`: if there are unfinished tasks from yesterday, mention `/review`
-- After `/organize`: if the vault has many notes, suggest generating a MOC
-- After `/process`: if the content relates to a project, suggest `/project`
-- After `/status`: if notes are untagged, suggest `/organize`
-
-Keep suggestions to one short sentence. Don't be pushy.
+After completing any action, briefly consider if a follow-up would be helpful. Keep suggestions to one short sentence. Don't be pushy.
