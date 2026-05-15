@@ -58,6 +58,35 @@ The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vau
 | `/daily` | daily | Create or open today's daily note |
 | `/review` | daily | Generate weekly/monthly review |
 | `/project` | project | Create a project note |
+| `/process` | core | Read recent vault changes, analyze and organize |
 | `/profile` | core | Switch active profile (no restart needed) |
 | `/onboarding` | core | Guided tour for new users |
 | `/status` | core | Vault dashboard overview |
+| `/memory` | core | View or update user habits and preferences |
+
+## Natural language intent routing
+
+**Users should NOT need to memorize commands.** When the user speaks naturally, match their intent to the right command:
+
+| User might say | Route to |
+|---------------|----------|
+| "今天的日记", "today's note", "daily note" | `/daily` |
+| "整理笔记库", "clean up", "organize" | `/organize` |
+| "建个项目", "create project", "new project" | `/project` |
+| "看看这周干了啥", "weekly review", "这周总结" | `/review` |
+| "写好了", "帮我整理", "process these", "帮我看看" | `/process` |
+| "切换场景", "switch profile", "换个场景" | `/profile` |
+| "vault 状态", "笔记库怎么样" | `/status` |
+| "记住", "我的习惯", "我偏好" | `/memory` |
+
+If the user's intent doesn't match any command, just help them directly — don't force a command.
+
+## Proactive suggestions
+
+After completing any action, briefly consider if a follow-up would be helpful:
+- After `/daily`: if there are unfinished tasks from yesterday, mention `/review`
+- After `/organize`: if the vault has many notes, suggest generating a MOC
+- After `/process`: if the content relates to a project, suggest `/project`
+- After `/status`: if notes are untagged, suggest `/organize`
+
+Keep suggestions to one short sentence. Don't be pushy.
