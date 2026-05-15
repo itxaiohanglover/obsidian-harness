@@ -343,9 +343,7 @@ function cmdInit(args) {
   console.log(`Installed: ${allSkills.length} skills, ${allCommands.length} commands`);
   console.log(`Profile: ${profileName} | Vault: ${vaultPath}`);
   if (failedDeps.length > 0) console.log(`⚠ ${failedDeps.length} dependencies failed`);
-  console.log(`\nNext: Edit your behavior profile`);
-  console.log(`  ${path.join(ACTIVE_PROFILE_DIR, "profile.md")}`);
-  console.log(`Done! Restart Claude Code to activate.\n`);
+  console.log(`\nDone! Restart Claude Code to activate.\n`);
 }
 
 function cmdSwitch(args) {
