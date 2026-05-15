@@ -365,10 +365,41 @@ function cmdSwitch(args) {
     process.exit(1);
   }
 
-  const profileName = args.profile || args._[0];
-  if (!profileName) {
+  const inputName = args.profile || args._[0];
+  if (!inputName) {
     console.error("Error: Specify a profile. Usage: obsidian-harness switch <name>");
     console.log("Available: " + listAvailableProfiles().map((p) => p.name).join(", "));
+    process.exit(1);
+  }
+
+  // Fuzzy match: try exact, then prefix, then edit distance
+  const available = listAvailableProfiles().map((p) => p.name);
+  let profileName = null;
+  if (available.includes(inputName)) {
+    profileName = inputName;
+  } else {
+    const prefixMatches = available.filter((n) => n.startsWith(inputName));
+    if (prefixMatches.length === 1) {
+      profileName = prefixMatches[0];
+      console.log(`  ℹ Did you mean "${profileName}"? Using that.`);
+    } else if (prefixMatches.length > 1) {
+      console.error(`Error: "${inputName}" matches multiple profiles: ${prefixMatches.join(", ")}`);
+      console.log("Please be more specific.");
+      process.exit(1);
+    } else {
+      // Edit distance (simple Levenshtein)
+      const distances = available.map((n) => ({ name: n, dist: levenshtein(inputName, n) }));
+      distances.sort((a, b) => a.dist - b.dist);
+      if (distances[0].dist <= 2) {
+        profileName = distances[0].name;
+        console.log(`  ℹ Did you mean "${profileName}"? Using that.`);
+      }
+    }
+  }
+
+  if (!profileName) {
+    console.error(`Error: Unknown profile "${inputName}".`);
+    console.log("Available: " + available.join(", "));
     process.exit(1);
   }
 
@@ -511,6 +542,22 @@ function cmdRecommend() {
     }
     console.log();
   }
+}
+
+// ── Fuzzy matching helper ──────────────────────────────────
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
 }
 
 // ── Main ───────────────────────────────────────────────────
