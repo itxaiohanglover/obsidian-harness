@@ -1,34 +1,35 @@
 # obsidian-harness
 
-Obsidian skill collection for Claude Code.
+Obsidian workflow layer for Claude Code. Brand: **oh-my-god**.
+
+## Core philosophy
+
+Knowledge work alternates between two states:
+
+- **Divergence** (发散) — brain is ahead of notes, messy, needs structure → `/fuck`
+- **Convergence** (收敛) — notes are ahead of brain, needs summary and clarity → `/ok`
+
+Users don't need to memorize commands. They feel their state and type one word.
 
 ## Prerequisites
 
-This harness extends [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills). Official skills are auto-installed during `init`, no manual step needed.
+This harness extends [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills). Official skills are auto-installed during `init`.
 
 ## User behavior profile — MUST READ FIRST
 
-**Before using any Obsidian skill, read the user's behavior profile.**
+Read `~/.claude/obsidian-harness/active-profile/profile.md` before using any skill. It contains the user's habits, preferences, and workflow patterns. Every skill must respect these settings.
 
-The active profile is stored at `~/.claude/obsidian-harness/active-profile/profile.md`. It contains the user's Obsidian habits, preferences, naming conventions, and workflow patterns. Every skill must respect these settings.
-
-If the profile does not exist or is incomplete, ask the user to fill it in. You can find profile templates in `profiles/<name>/profile.md`.
+If the profile doesn't exist or is incomplete, ask the user to fill it in.
 
 ## Scene-specific prompts (prompt.json)
 
-**After reading the profile, check if there are scene-specific prompts for the skill you're about to use.**
+Check `~/.claude/obsidian-harness/active-profile/prompt.json` before executing any skill. If a skill name has an entry, prepend that prompt to the skill's default instructions.
 
-The file `~/.claude/obsidian-harness/active-profile/prompt.json` maps skill names to custom prompts. Before executing any skill:
-
-1. Read `prompt.json`
-2. If the skill name has an entry, prepend that prompt to the skill's default instructions
-3. If no entry exists, use the skill's default behavior
-
-Users can edit `prompt.json` to customize how each skill behaves in their current scene.
+The `_memory` key stores user preferences and phrases. Respect it.
 
 ## Vault path
 
-The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vault path is remembered — no need to pass `--vault` again. If cwd contains `.obsidian/`, vault is auto-detected.
+Stored in `~/.claude/obsidian-harness.json`. If cwd contains `.obsidian/`, vault is auto-detected.
 
 ## Organization principles
 
@@ -39,42 +40,46 @@ The vault path is stored in `~/.claude/obsidian-harness.json`. After `init`, vau
 
 ## Skill modules
 
-| Module | Skills | Description |
-|--------|--------|-------------|
-| core | vault-organize, knowledge-manage | Vault organization and knowledge management |
-| daily | daily-workflow | Daily notes, task rollover, reviews |
-| project | project-notes | Project notes, dev logs, meeting minutes |
+| Module | Skills | When to include |
+|--------|--------|----------------|
+| daily (always) | vault-organize, knowledge-manage, daily-workflow | Default. Daily notes, vault health, organization |
+| project (optional) | project-notes | Coding scenario. Project notes, meetings, dev logs |
 
-## Atomic commands (always available)
+## Atomic commands
 
-| Command | What user means | What to do |
-|---------|----------------|------------|
-| `/ok` | "I'm back, continue" | Detect vault changes since last interaction, continue working |
-| `/fuck` | "This is a mess, fix it" | Auto-diagnose: organize / untangle / restructure / split |
-| `/gun <name>` | "Switch to scene" | Switch profile, load scene-specific commands |
+Only 3 commands. Everything else is natural language.
 
-## Profile-loaded commands (available when module is included)
+| Command | State | What to do |
+|---------|-------|------------|
+| `/ok` | Convergence — notes ahead of brain | Summarize progress, detect changes, suggest next steps. Health check silently. |
+| `/fuck` | Divergence — brain ahead of notes | Scan for problems, organize chaos, structure messy input. Ask before acting when no target. |
+| `/gun <name>` | Switch scene | Switch profile via `npx obsidian-harness switch <name>`. Fuzzy matching enabled. |
 
-| Command | Module | Description |
-|---------|--------|-------------|
-| `/organize` | core | Audit and organize vault structure |
-| `/daily` | daily | Create or open today's daily note |
-| `/review` | daily | Generate weekly/monthly review |
-| `/project` | project | Create a project note |
+### Input = scope modifier
+
+- `/ok` (no input) → personal standup: recent changes + next step
+- `/ok 最近一周` → weekly review
+- `/ok 项目A` → project status
+- `/fuck` (no input) → vault scan, present 2-3 problem directions
+- `/fuck 项目A` → restructure project A's notes
+- `/fuck 最近一周` → organize this week's messy output
 
 ## Natural language intent routing
 
-**Users should NOT need to memorize commands.** When the user speaks naturally, match their intent:
+Users should NOT need to memorize commands. Match intent:
 
 | User might say | Route to |
 |---------------|----------|
 | "我改好了", "继续", "我回来了", "好了" | `/ok` |
 | "这什么鬼", "帮我整理", "太乱了", "搞一下" | `/fuck` |
 | "滚到xxx", "切到xxx", "换个场景" | `/gun xxx` |
+| "今天的日记", "日记" | Create daily note via daily-workflow skill |
+| "帮我记一下会议" | Create meeting note via project-notes skill |
 | "记住", "我的习惯是" | Save to prompt.json `_memory` |
+| "周报", "月报" | `/ok 最近一周` / `/ok 最近一月` |
 
-If the user's intent doesn't match any command, just help them directly — don't force a command.
+If intent doesn't match any command, just help directly.
 
 ## Proactive suggestions
 
-After completing any action, briefly consider if a follow-up would be helpful. Keep suggestions to one short sentence. Don't be pushy.
+After completing any action, one short sentence suggestion max. Don't be pushy.

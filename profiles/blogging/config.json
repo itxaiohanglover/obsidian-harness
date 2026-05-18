@@ -1,5 +1,0 @@
-{
-  "name": "blogging",
-  "description": "博客写作场景 — 内容创作与发布",
-  "modules": ["core", "daily"]
-}

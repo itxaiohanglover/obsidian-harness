@@ -1,1 +1,0 @@
-Generate a periodic review. Run the `daily-workflow` skill's review workflow. Ask the user whether they want a weekly or monthly review, then collect daily notes from the period and generate a summary with accomplishments, carry-over tasks, and key insights.

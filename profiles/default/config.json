@@ -1,5 +1,0 @@
-{
-  "name": "default",
-  "description": "默认场景 — 全能型笔记库管理",
-  "modules": ["core", "daily", "project"]
-}

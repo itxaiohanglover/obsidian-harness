@@ -99,7 +99,7 @@ function deployProfile(profileName) {
 
 // ── Symlink helpers ────────────────────────────────────────
 function symlinkForce(target, linkPath) {
-  if (fs.existsSync(linkPath)) fs.unlinkSync(linkPath);
+  try { fs.unlinkSync(linkPath); } catch {}
   fs.mkdirSync(path.dirname(linkPath), { recursive: true });
   fs.symlinkSync(target, linkPath);
 }
@@ -315,7 +315,7 @@ function cmdInit(args) {
     process.exit(1);
   }
 
-  const profileName = args.profile || "default";
+  const profileName = args.profile || "daily";
   const profile = loadProfile(profileName);
   if (!profile) {
     console.error(`Error: Unknown profile "${profileName}".`);
@@ -523,7 +523,7 @@ function cmdDashboard() {
   console.log(`📅 Last daily: ${lastDaily}`);
   console.log(`🔧 Profile: ${profileName}`);
   console.log(`📦 Harness: v${harnessVersion}`);
-  console.log(`\nQuick actions: /daily /organize /review /process /dashboard /memory`);
+  console.log(`\nQuick actions: /ok /fuck /gun`);
 }
 
 function cmdRecommend() {
@@ -621,7 +621,7 @@ Usage:
 
 Options:
   --vault <path>          Obsidian vault path (only needed for init; auto-detected if cwd has .obsidian/)
-  --profile <name>        Profile to use (default: default)
+  --profile <name>        Profile to use (default: daily)
   --no-auto-deps          Skip automatic dependency installation
 
 Current profile: ${active}
@@ -630,9 +630,9 @@ Available profiles:
 ${profiles.map((p) => `  ${p.name.padEnd(12)} ${p.description}`).join("\n")}
 
 Quick start:
-  npx obsidian-harness init                     # Auto-detect vault, use default profile
-  npx obsidian-harness init --profile blogging  # Install with blogging profile
-  npx obsidian-harness switch project           # Switch to project profile (seconds)
+  npx obsidian-harness init                     # Auto-detect vault, use daily profile
+  npx obsidian-harness init --profile coding    # Install with coding profile
+  npx obsidian-harness switch coding            # Switch to coding profile
 `);
 }
 

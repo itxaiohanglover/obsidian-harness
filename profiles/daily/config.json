@@ -1,0 +1,5 @@
+{
+  "name": "daily",
+  "description": "日常使用 — 笔记整理、日记、周报",
+  "modules": ["daily"]
+}
