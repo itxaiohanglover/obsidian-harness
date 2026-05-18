@@ -78,6 +78,35 @@ oh-my-god 把这些交给 Claude。你不需要学命令，只需要感知自己
 
 ---
 
+## 架构
+
+oh-my-god 只有两层概念：
+
+- **Module** = 能力的容器（能做什么）。一组 skills、commands、templates 的打包。
+- **Profile** = 场景的容器（用哪些能力）。一组 module 的组合 + 个性化配置。
+
+```
+Module（积木）        Profile（搭出来的场景）
+┌──────────────┐     ┌─────────────────────┐
+│ skills       │     │ daily module         │
+│ commands     │  ×N  │   +                  │
+│ templates    │ ───→ │ prompt.json (个性化)  │
+│ rules        │     │ profile.md (偏好)     │
+└──────────────┘     └─────────────────────┘
+```
+
+你只和 profile 打交道（`/gun coding`）。module 是给 profile 作者用的。日常用户不需要知道 module 的存在。
+
+内置两个 module：
+- **daily**（必装）— 笔记整理、日记、vault 健康
+- **project**（可选）— 项目笔记、会议纪要、代码文档
+
+内置两个 profile：
+- **daily** = daily module → 日常使用
+- **coding** = daily + project module → 编码文档
+
+---
+
 ## 和 obsidian-skills 的关系
 
 ```
