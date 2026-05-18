@@ -8,7 +8,7 @@
 
 你的 Obsidian vault 越用越乱：笔记找不到、标签没整理、日记写了就忘、项目文档散落各处。想整理，但不知道从哪开始。
 
-oh-my-god 把这些交给 Claude。你不需要学命令，只需要感知自己的状态——脑子乱了？`/fuck`。想看进度？`/ok`。完。
+oh-my-god 把这些交给 Claude。你不需要学命令，只需要感知自己的状态——脑子乱了？`/um`。看清楚了？`/aha`。换个场景？`/go`。完。
 
 ---
 
@@ -29,32 +29,32 @@ oh-my-god 把这些交给 Claude。你不需要学命令，只需要感知自己
 知识工作只交替两种状态——发散与收敛。你脑子里塞满了想法需要整理，或者你已经做了很多需要回头看。两个状态，两个词。
 
 ```
-        发散（/fuck）           收敛（/ok）
+        发散（/um）            收敛（/aha）
        ────╱╲────          ────╱╲────
           ╱    ╲              ╱    ╲
      混乱 → 结构           进度 → 清晰
 ```
 
-- **脑子比笔记多** — 东西在脑子里，乱，没结构 → `/fuck`，帮你外化和整理
-- **笔记比脑子多** — 已经做了很多，需要看清全貌 → `/ok`，帮你总结和延续
+- **脑子比笔记多** — 东西在脑子里，乱，没结构 → `/um`，帮你外化和整理
+- **笔记比脑子多** — 已经做了很多，需要看清全貌 → `/aha`，帮你总结和延续
 
 你不需要想"该用哪个命令"，只需要感受自己当下的状态。状态是本能，不需要记忆。
 
 | 你的状态 | 输入 | Claude 干什么 |
 |---------|------|-------------|
-| 脑子比笔记多 | `/fuck` | 整理、梳理、发现问题 |
-| 笔记比脑子多 | `/ok` | 总结、汇报、建议下一步 |
-| 想换个脑子 | `/gun xxx` | 切换场景 |
+| 脑子比笔记多 | `/um` | 整理、梳理、发现问题 |
+| 笔记比脑子多 | `/aha` | 总结、汇报、建议下一步 |
+| 想换个脑子 | `/go xxx` | 切换场景 |
 
 **不说话也行：**
 
-- `/fuck` → 扫描 vault，告诉你哪里有问题，让你选方向
-- `/ok` → 总结你最近干了什么，建议下一步
+- `/um` → 扫描 vault，告诉你哪里有问题，让你选方向
+- `/aha` → 总结你最近干了什么，建议下一步
 
 **加范围也行：**
 
-- `/fuck 项目A` → 帮我理清项目A的笔记
-- `/ok 最近一周` → 帮我总结这周干了什么
+- `/um 项目A` → 帮我理清项目A的笔记
+- `/aha 最近一周` → 帮我总结这周干了什么
 
 **直接说也行：**
 
@@ -66,44 +66,38 @@ oh-my-god 把这些交给 Claude。你不需要学命令，只需要感知自己
 
 ## 场景
 
-`/gun xxx` 切换，三个内置场景：
+`/go xxx` 切换，三个内置场景：
 
 | 场景 | 说明 |
 |------|------|
-| `/gun daily` | 日常使用（默认） |
-| `/gun coding` | 编码文档 |
-| `/gun research` | 文档研究 |
+| `/go daily` | 日常使用（默认） |
+| `/go coding` | 编码文档 |
+| `/go research` | 文档研究 |
 
-场景不增加新命令。同一个 `/ok` 和 `/fuck`，在不同场景下自动调整行为。打错了也没事，`/gun code` 自动匹配到 `coding`。
+场景不增加新命令。同一个 `/um` 和 `/aha`，在不同场景下自动调整行为。打错了也没事，`/go code` 自动匹配到 `coding`。
 
 ---
 
 ## 架构
 
-oh-my-god 只有两层概念：
+oh-my-god 是一个 Claude Plugin，提供场景管理能力：
 
-- **Module** = 能力的容器（能做什么）。一组 skills、commands、templates 的打包。
-- **Profile** = 场景的容器（用哪些能力）。一组 module 的组合 + 个性化配置。
+- **Plugin 层** = 标准打包格式（skills + commands + agents）
+- **场景层** = oh-my-god 独有，管理"当前场景激活哪些能力" + vault 部署
 
 ```
-Module（积木）        Profile（搭出来的场景）
+Plugin（标准打包）      场景管理（oh-my-god 独有）
 ┌──────────────┐     ┌─────────────────────┐
-│ skills       │     │ daily module         │
-│ commands     │  ×N  │   +                  │
-│ templates    │ ───→ │ prompt.json (个性化)  │
-│ rules        │     │ profile.md (偏好)     │
+│ skills       │     │ 场景切换 /go         │
+│ commands     │  +  │ vault 本地配置        │
+│ agents       │     │ 行为个性化 prompt.json│
 └──────────────┘     └─────────────────────┘
 ```
 
-你只和 profile 打交道（`/gun coding`）。module 是给 profile 作者用的。日常用户不需要知道 module 的存在。
-
-内置两个 module：
-- **daily**（必装）— 笔记整理、日记、vault 健康
-- **project**（可选）— 项目笔记、会议纪要、代码文档
-
-内置两个 profile：
-- **daily** = daily module → 日常使用
-- **coding** = daily + project module → 编码文档
+内置场景：
+- **daily**（默认）— 笔记整理、日记、vault 健康
+- **coding** — 项目笔记、会议纪要、代码文档
+- **research** — 文献管理、研究笔记（待建）
 
 ---
 
@@ -111,7 +105,7 @@ Module（积木）        Profile（搭出来的场景）
 
 ```
 obsidian-skills → 格式层（怎么写 markdown、canvas、bases）
-oh-my-god       → 工作流层（怎么整理 vault、管理日记、跟踪项目）
+oh-my-god       → 工作流层（怎么整理 vault、场景切换、行为定制）
 ```
 
 自动安装 obsidian-skills 核心技能，开箱即用。
@@ -120,17 +114,17 @@ oh-my-god       → 工作流层（怎么整理 vault、管理日记、跟踪项
 
 ## 自建场景
 
-继承内置场景，只改你需要的：
+基于内置场景扩展，只改你需要的：
 
 ```
-profiles/
-└── my-team/
-    ├── config.json   ← { "extends": ["daily", "project"] }
-    ├── profile.md    ← 你的习惯和偏好
-    └── prompt.json   ← 微调提示词
+{vault}/.obsidian-harness/
+├── scenes/
+│   └── my-team/
+│       └── prompt.json   ← 微调提示词
+└── profile.md            ← 你的习惯和偏好
 ```
 
-`/gun my-team` 搞定。
+`/go my-team` 搞定。
 
 ---
 
@@ -139,8 +133,8 @@ profiles/
 一个 vault 干一件事，一个终端管一个 vault：
 
 ```
-终端 1: cd ~/vaults/daily  && claude   → /gun daily
-终端 2: cd ~/vaults/coding && claude   → /gun coding
+终端 1: cd ~/vaults/daily  && claude   → /go daily
+终端 2: cd ~/vaults/coding && claude   → /go coding
 ```
 
 越用越懂你。

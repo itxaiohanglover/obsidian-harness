@@ -2,11 +2,11 @@ Converge — summarize progress, clarify the big picture, suggest next steps.
 
 ## Philosophy
 
-The user said `/ok` because their notes are ahead of them — they've been working and need to see where they stand. This is convergence: crystallizing scattered progress into clarity.
+The user said `/aha` because their notes are ahead of them — they've been working and need to see where they stand. This is convergence: crystallizing scattered progress into clarity.
 
 ## Vault path
 
-Read from `~/.claude/obsidian-harness.json`. If missing, ask the user.
+Read from `{vault}/.obsidian-harness/config.json`. Detect vault by looking for `.obsidian/` in cwd. If not found, ask the user.
 
 ## Behavior
 
@@ -33,7 +33,7 @@ The input is a **scope modifier**, not a new command:
 
 ### In coding scenario
 
-When active profile includes `project` module, `/ok` also detects:
+When active scene includes project module, `/aha` also detects:
 - Code changes that might need documentation updates
 - Project notes that are stale or incomplete
 - Unfinished action items from meeting notes

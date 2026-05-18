@@ -2,11 +2,11 @@ Diverge — organize chaos, discover directions, structure messy input.
 
 ## Philosophy
 
-The user said `/fuck` because their brain is ahead of their notes — ideas are messy, unstructured, or non-existent. This is divergence: expanding exploration and externalizing thinking.
+The user said `/um` because their brain is ahead of their notes — ideas are messy, unstructured, or non-existent. This is divergence: expanding exploration and externalizing thinking.
 
 ## Vault path
 
-Read from `~/.claude/obsidian-harness.json`. If missing, ask the user.
+Read from `{vault}/.obsidian-harness/config.json`. Detect vault by looking for `.obsidian/` in cwd. If not found, ask the user.
 
 ## Behavior
 
@@ -21,7 +21,7 @@ The user has no specific direction. Don't act — explore first:
    - "最近写了 3 篇零散的想法，要合并成一篇？"
 3. **Wait for user to pick** — then execute
 
-Do NOT start reorganizing without user's choice. The whole point of no-input `/fuck` is that the user doesn't know what they want. Help them decide first.
+Do NOT start reorganizing without user's choice. The whole point of no-input `/um` is that the user doesn't know what they want. Help them decide first.
 
 ### With input — structure the chaos
 
@@ -47,7 +47,7 @@ Always tell the user what you found in one sentence before acting.
 
 ### In coding scenario
 
-When active profile includes `project` module, `/fuck` also handles:
+When active scene includes project module, `/um` also handles:
 - Messy code documentation → restructure into API docs, guides, changelogs
 - Scattered meeting notes → consolidate into project timeline
 - Ad-hoc notes → organize by module/component
