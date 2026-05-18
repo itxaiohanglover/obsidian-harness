@@ -1,129 +1,122 @@
 # oh-my-god
 
-> 你的笔记库太乱了？**ok, fuck, gun.** 就这三个词。
+> **三个词，让 Claude 帮你管 Obsidian。**
 
-npm 包名 `obsidian-harness`，品牌名 **oh-my-god**。
-
-和 [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) 一个套路，但管的是你的 Obsidian 笔记库。
+npm 包名 `obsidian-harness`，灵感来自 [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)。
 
 ---
 
-## 三个词，够了
+## 解决什么问题？
 
-你和 Claude 之间只需要三种情绪：
+你的 Obsidian vault 越用越乱：笔记找不到、标签没整理、日记写了就忘、项目文档散落各处。想整理，但不知道从哪开始。
 
-| 你心里想的 | 输入 | Claude 干什么 |
-|-----------|------|-------------|
-| 我改好了，你继续 | `/ok` | 检测 Obsidian 变更，接着上次的活干 |
-| 这什么鬼，帮我搞 | `/fuck` | 自动判断：整理 / 理思路 / 结构化 |
-| 滚到别的场景去 | `/gun xxx` | 切换 profile，加载专属命令 |
-
-不用记更多了。别的自然说就行：
-- "今天的日记" → 创建日记
-- "记住我喜欢用中文" → 存到记忆
-- "这周干了啥" → 生成周报
+oh-my-god 把这些交给 Claude。你不需要学命令，只需要感知自己的状态——脑子乱了？`/fuck`。想看进度？`/ok`。完。
 
 ---
 
 ## 安装
 
-打开 Claude Code，进入你的 vault 目录，粘贴：
+打开 Claude Code，进入你的 vault 目录，粘贴这句话：
 
 ```
 帮我安装 obsidian-harness，执行 npx obsidian-harness init
 ```
 
-装完。然后 `/ok` `/fuck` `/gun` 三连走起。
+装完。开始用。
 
 ---
 
-## 这是什么？
+## 三个词
 
-oh-my-god 补的是 [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) 不管的那一层：
+知识工作只交替两种状态——发散与收敛。你脑子里塞满了想法需要整理，或者你已经做了很多需要回头看。两个状态，两个词。
 
 ```
-kepano/obsidian-skills  →  格式层（怎么写 markdown、canvas、bases）
-oh-my-god               →  工作流层（怎么整理 vault、管理日记、跟踪项目）
+        发散（/fuck）           收敛（/ok）
+       ────╱╲────          ────╱╲────
+          ╱    ╲              ╱    ╲
+     混乱 → 结构           进度 → 清晰
 ```
+
+- **脑子比笔记多** — 东西在脑子里，乱，没结构 → `/fuck`，帮你外化和整理
+- **笔记比脑子多** — 已经做了很多，需要看清全貌 → `/ok`，帮你总结和延续
+
+你不需要想"该用哪个命令"，只需要感受自己当下的状态。状态是本能，不需要记忆。
+
+| 你的状态 | 输入 | Claude 干什么 |
+|---------|------|-------------|
+| 脑子比笔记多 | `/fuck` | 整理、梳理、发现问题 |
+| 笔记比脑子多 | `/ok` | 总结、汇报、建议下一步 |
+| 想换个脑子 | `/gun xxx` | 切换场景 |
+
+**不说话也行：**
+
+- `/fuck` → 扫描 vault，告诉你哪里有问题，让你选方向
+- `/ok` → 总结你最近干了什么，建议下一步
+
+**加范围也行：**
+
+- `/fuck 项目A` → 帮我理清项目A的笔记
+- `/ok 最近一周` → 帮我总结这周干了什么
+
+**直接说也行：**
+
+- "今天的日记" → 创建日记
+- "帮我记一下会议" → 会议纪要
+- "记住我喜欢用中文" → 存到记忆，以后每次都记着
 
 ---
 
 ## 场景
 
-每个场景有自己的命令和风格，`/gun xxx` 切换：
+`/gun xxx` 切换，三个内置场景：
 
-| 场景 | 说明 | 额外命令 |
-|------|------|---------|
-| `default` | 全能型 | `/organize` `/daily` `/review` `/project` |
-| `blogging` | 写博客 | `/organize` `/daily` `/review` |
-| `project` | 写代码 | `/organize` `/project` `/dashboard` |
-| `learning` | 写笔记 | `/organize` `/daily` `/review` |
+| 场景 | 说明 |
+|------|------|
+| `/gun daily` | 日常使用（默认） |
+| `/gun coding` | 编码文档 |
+| `/gun research` | 文档研究 |
 
-打错了也行，`/gun blog` 自动匹配到 `blogging`。
+场景不增加新命令。同一个 `/ok` 和 `/fuck`，在不同场景下自动调整行为。打错了也没事，`/gun code` 自动匹配到 `coding`。
 
-### 自建场景
+---
+
+## 和 obsidian-skills 的关系
+
+```
+obsidian-skills → 格式层（怎么写 markdown、canvas、bases）
+oh-my-god       → 工作流层（怎么整理 vault、管理日记、跟踪项目）
+```
+
+自动安装 obsidian-skills 核心技能，开箱即用。
+
+---
+
+## 自建场景
+
+继承内置场景，只改你需要的：
 
 ```
 profiles/
-└── my-writing/
-    ├── config.json      # { "modules": ["core", "daily"] }
-    ├── profile.md       # 你的习惯、风格、偏好
-    └── prompt.json      # skill → 专属 prompt
+└── my-team/
+    ├── config.json   ← { "extends": ["daily", "project"] }
+    ├── profile.md    ← 你的习惯和偏好
+    └── prompt.json   ← 微调提示词
 ```
 
-`/gun my-writing` 搞定。
+`/gun my-team` 搞定。
 
 ---
 
-## 推荐玩法：一个 Vault 一件事
+## 推荐玩法
 
-同时写书、写博客、写专利？别混在一起：
-
-```
-终端 1: cd ~/vaults/my-book && claude    → /gun book
-终端 2: cd ~/vaults/my-blog && claude    → /gun blog
-终端 3: cd ~/vaults/my-patent && claude  → /gun patent
-```
-
-每个终端只干一件事，每个 Vault 独立进化，越用越懂你。
-
----
-
-## 越用越好
+一个 vault 干一件事，一个终端管一个 vault：
 
 ```
-记住我喜欢用中文写笔记，技术术语用英文
-记住"搞一下"的意思是深度分析和整理
-记住我的流程是：收集素材 → 整理大纲 → 写作 → 画图
+终端 1: cd ~/vaults/daily  && claude   → /gun daily
+终端 2: cd ~/vaults/coding && claude   → /gun coding
 ```
 
-说一次，以后每次都记着。
-
----
-
-## 技能
-
-### 自研
-
-| 技能 | 说明 |
-|------|------|
-| `vault-organize` | 审计笔记库，生成 MOC，规范化命名 |
-| `knowledge-manage` | 整理标签，检测孤儿笔记与断链 |
-| `daily-workflow` | 日记、任务转办、周/月报 |
-| `project-notes` | 项目笔记、开发日志、会议纪要 |
-
-### 自动安装
-
-- **obsidian-cli** — 对运行中的 Obsidian 执行操作
-- **obsidian-markdown** — Obsidian 风格 Markdown
-- **obsidian-bases** — Bases 数据库系统
-- **json-canvas** — Canvas 可视化画板
-- **defuddle** — 从网页提取干净 Markdown
-
-### 按需安装
-
-- [可视化](https://github.com/axtonliu/axton-obsidian-visual-skills) — Mermaid / Excalidraw / Canvas
-- [学习](https://github.com/bevibing/tutor-skills) — 学习资料整理、交互式测验
+越用越懂你。
 
 ---
 
