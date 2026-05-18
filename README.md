@@ -2,8 +2,6 @@
 
 > **三个词，让 Claude 帮你管 Obsidian。**
 
-npm 包名 `obsidian-harness`，灵感来自 [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)。
-
 ---
 
 ## 解决什么问题？
