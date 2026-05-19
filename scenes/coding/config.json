@@ -1,5 +1,0 @@
-{
-  "name": "coding",
-  "description": "编码文档 — 项目笔记、代码文档、会议纪要",
-  "modules": ["daily", "project"]
-}

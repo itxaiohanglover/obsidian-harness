@@ -1,0 +1,9 @@
+{
+  "scene": "coding",
+  "description": "编码文档 — 项目笔记、开发日志、会议纪要、代码文档",
+  "requires": {
+    "skills": ["obsidian-markdown", "obsidian-cli", "json-canvas"],
+    "mcp": [],
+    "plugins": []
+  }
+}

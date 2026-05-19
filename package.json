@@ -1,24 +1,24 @@
 {
-  "name": "obsidian-harness",
-  "version": "0.1.0",
-  "description": "Curated Obsidian skills for Claude Code — workflow, organization, and knowledge management",
+  "name": "persona",
+  "version": "0.5.0",
+  "description": "Personal AI work persona management — switch scenes, distill habits, get smarter over time",
   "bin": {
-    "obsidian-harness": "scripts/install.js"
+    "persona": "./install.sh"
   },
   "files": [
-    "modules/",
-    "profiles/",
-    "scripts/",
-    ".claude-plugin/",
-    "CLAUDE.md",
-    "skill-registry.json"
+    "commands/",
+    "scenes/",
+    "registry.json",
+    "install.sh",
+    "CLAUDE.md"
   ],
   "keywords": [
-    "obsidian",
+    "persona",
     "claude",
     "claude-code",
-    "pkm",
-    "skills",
+    "obsidian",
+    "ai-workflow",
+    "prompt-management",
     "knowledge-management"
   ],
   "license": "MIT"

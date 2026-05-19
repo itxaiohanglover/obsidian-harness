@@ -1,80 +1,80 @@
 [
   {
     "name": "obsidian-cli",
+    "type": "skill",
     "source": "kepano/obsidian-skills",
-    "category": "official",
     "description": "CLI operations on a running Obsidian instance (search, read, write, properties, backlinks, daily notes)",
     "install": "npx skills add git@github.com:kepano/obsidian-skills.git",
     "url": "https://github.com/kepano/obsidian-skills"
   },
   {
     "name": "obsidian-markdown",
+    "type": "skill",
     "source": "kepano/obsidian-skills",
-    "category": "official",
     "description": "Obsidian Flavored Markdown syntax (wikilinks, embeds, callouts, properties, tags, math, mermaid)",
     "install": "npx skills add git@github.com:kepano/obsidian-skills.git",
     "url": "https://github.com/kepano/obsidian-skills"
   },
   {
     "name": "obsidian-bases",
+    "type": "skill",
     "source": "kepano/obsidian-skills",
-    "category": "official",
     "description": "Obsidian Bases database/query system (.base files with filters, formulas, views)",
     "install": "npx skills add git@github.com:kepano/obsidian-skills.git",
     "url": "https://github.com/kepano/obsidian-skills"
   },
   {
     "name": "json-canvas",
+    "type": "skill",
     "source": "kepano/obsidian-skills",
-    "category": "official",
     "description": "JSON Canvas visual boards (.canvas files with nodes, edges, groups)",
     "install": "npx skills add git@github.com:kepano/obsidian-skills.git",
     "url": "https://github.com/kepano/obsidian-skills"
   },
   {
     "name": "defuddle",
+    "type": "skill",
     "source": "kepano/obsidian-skills",
-    "category": "official",
     "description": "Clean markdown extraction from web pages, reducing token usage",
     "install": "npx skills add git@github.com:kepano/obsidian-skills.git",
     "url": "https://github.com/kepano/obsidian-skills"
   },
   {
-    "name": "obsidian-canvas-creator",
-    "source": "axtonliu/axton-obsidian-visual-skills",
-    "category": "visual",
-    "description": "Generate .canvas whiteboards with auto-layout and collision detection",
-    "install": "npx skills add git@github.com:axtonliu/axton-obsidian-visual-skills.git",
-    "url": "https://github.com/axtonliu/axton-obsidian-visual-skills"
-  },
-  {
     "name": "mermaid-visualizer",
+    "type": "skill",
     "source": "axtonliu/axton-obsidian-visual-skills",
-    "category": "visual",
     "description": "Generate Mermaid diagrams with syntax safety and error prevention",
     "install": "npx skills add git@github.com:axtonliu/axton-obsidian-visual-skills.git",
     "url": "https://github.com/axtonliu/axton-obsidian-visual-skills"
   },
   {
     "name": "excalidraw-diagram",
+    "type": "skill",
     "source": "axtonliu/axton-obsidian-visual-skills",
-    "category": "visual",
     "description": "Generate hand-drawn style Excalidraw diagrams (flowcharts, mindmaps, timelines)",
     "install": "npx skills add git@github.com:axtonliu/axton-obsidian-visual-skills.git",
     "url": "https://github.com/axtonliu/axton-obsidian-visual-skills"
   },
   {
+    "name": "obsidian-canvas-creator",
+    "type": "skill",
+    "source": "axtonliu/axton-obsidian-visual-skills",
+    "description": "Generate .canvas whiteboards with auto-layout and collision detection",
+    "install": "npx skills add git@github.com:axtonliu/axton-obsidian-visual-skills.git",
+    "url": "https://github.com/axtonliu/axton-obsidian-visual-skills"
+  },
+  {
     "name": "tutor-setup",
+    "type": "skill",
     "source": "bevibing/tutor-skills",
-    "category": "learning",
     "description": "Turn study materials (PDF, Markdown, web) into a structured learning vault with quizzes",
     "install": "npx skills add git@github.com:bevibing/tutor-skills.git",
     "url": "https://github.com/bevibing/tutor-skills"
   },
   {
     "name": "tutor",
+    "type": "skill",
     "source": "bevibing/tutor-skills",
-    "category": "learning",
     "description": "Interactive quizzes with adaptive questioning and per-concept progress tracking",
     "install": "npx skills add git@github.com:bevibing/tutor-skills.git",
     "url": "https://github.com/bevibing/tutor-skills"

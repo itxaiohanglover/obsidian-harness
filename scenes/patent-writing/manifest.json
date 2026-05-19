@@ -1,0 +1,9 @@
+{
+  "scene": "patent-writing",
+  "description": "专利撰写 — 技术方案文档化、权利要求书、现有技术检索",
+  "requires": {
+    "skills": ["obsidian-markdown", "mermaid-visualizer"],
+    "mcp": [],
+    "plugins": []
+  }
+}
