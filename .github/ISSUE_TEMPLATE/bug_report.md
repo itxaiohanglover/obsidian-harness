@@ -1,32 +1,31 @@
 ---
 name: Bug Report
-about: Report a bug in obsidian-harness
-title: "[Bug] "
+about: 报告 persona 的问题
+title: '[bug] '
 labels: bug
 assignees: ''
+
 ---
 
-## Describe the bug
+**环境信息**
+- OS: [e.g. macOS 15, Ubuntu 24]
+- Claude Code 版本: [e.g. 1.0.x]
+- Persona 版本: [package.json 中的 version]
+- 当前场景: [e.g. daily, coding]
 
-A clear description of what the bug is.
+**问题描述**
+简要描述遇到的问题。
 
-## To reproduce
+**复现步骤**
+1. 执行 `/go ...`
+2. 执行 `/um ...`
+3. 观察到 ...
 
-Steps to reproduce:
-1. Run `npx obsidian-harness ...`
-2. ...
+**期望行为**
+你预期 AI 应该怎么做？
 
-## Expected behavior
+**实际行为**
+AI 实际做了什么？
 
-What you expected to happen.
-
-## Environment
-
-- OS: (macOS / Linux / Windows)
-- Node.js version: `node --version`
-- obsidian-harness version: 
-- Active profile: `npx obsidian-harness profiles`
-
-## Output
-
-Paste relevant terminal output or error messages.
+**相关文件**（可选）
+如果涉及自定义场景，贴出 `prompts.json` 或 `manifest.json` 的关键片段。

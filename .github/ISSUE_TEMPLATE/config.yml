@@ -1,5 +1,5 @@
-blank_issues_enabled: false
+blank_issues_enabled: true
 contact_links:
-  - name: Question
-    url: https://github.com/xinhai/obsidian-harness/discussions
-    about: Ask a question or start a discussion
+  - name: 💬 讨论 / 提问
+    url: https://github.com/itxaiohanglover/obsidian-harness/discussions
+    about: 提问或分享你的场景配置
