@@ -232,8 +232,9 @@ Skill overlay 距离 AI 最近，优先级最高，不易被上下文截断。
 
 | 场景 | Actions | Skills |
 |------|---------|--------|
-| `daily` | daily-note, weekly-review, health-check, generate-moc, split-note, dashboard | obsidian-markdown, obsidian-cli, obsidian-bases |
-| `coding` | project-note, dev-log, meeting, architecture, canvas-map | obsidian-markdown, obsidian-cli, json-canvas |
+| `daily` | daily-note, weekly-review, health-check, generate-moc, split-note, dashboard, **quick-capture**, **clip-web** | obsidian-markdown, obsidian-cli, obsidian-bases |
+| `coding` | project-note, dev-log, meeting, architecture, canvas-map, **visualize**, **excalidraw** | obsidian-markdown, obsidian-cli, json-canvas, mermaid-visualizer, excalidraw-diagram, obsidian-canvas-creator |
+| `learning` | **setup-vault, quiz, progress, explain, flashcard** | obsidian-markdown, obsidian-cli, tutor-setup, tutor, mermaid-visualizer |
 | `patent-writing` | claim, prior-art, specification, patent-figure | obsidian-markdown, mermaid-visualizer |
 | `patent-writing-en` | claim (覆盖) + 继承父的 3 个 | +defuddle |
 
