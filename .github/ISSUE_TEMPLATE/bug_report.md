@@ -11,7 +11,7 @@ assignees: ''
 - OS: [e.g. macOS 15, Ubuntu 24]
 - Claude Code 版本: [e.g. 1.0.x]
 - Persona 版本: [package.json 中的 version]
-- 当前场景: [e.g. daily, coding]
+- 当前场景: [e.g. research, coding, learning]
 
 **问题描述**
 简要描述遇到的问题。

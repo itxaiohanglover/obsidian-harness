@@ -22,7 +22,7 @@ Switch scene — enter a different work persona.
       ```
    e. Output: "🎉 首次使用！已创建 .persona/ 目录。"
    f. Output: "📝 已创建 profile.md — 有空时写几句你的工作风格，AI 会越来越懂你。"
-   g. If no argument provided, additionally show: "试试 `/go daily` 开始日常模式，或 `/new` 创建自己的场景。"
+   g. If no argument provided, additionally show: "试试 `/go research` 开始调研模式，或 `/new` 创建自己的场景。"
 4. Read `~/.claude/persona.json` → get `repo_path`
 5. Locate scene:
    - First: `{cwd}/.persona/scenes/{name}/`
@@ -93,7 +93,7 @@ Scan both directories for available scenes:
 Output each scene with one-line description from `_meta.description`:
 ```
 可用场景：
-  daily      — 日常笔记管理：日记、知识库健康、vault 组织
+  research   — 调研探索：信息收集、对比分析、综合报告
   coding     — 编码文档：项目笔记、开发日志、会议纪要
   patent-writing — 专利撰写：权利要求、说明书、附图
 ```
@@ -105,7 +105,7 @@ Priority: exact match > prefix match > Levenshtein distance ≤ 2.
 Examples:
 - `code` → matches `coding` (prefix)
 - `patent` → matches `patent-writing` (prefix)
-- `daly` → matches `daily` (edit distance 1)
+- `resarch` → matches `research` (edit distance 1)
 
 ## Dependency Check Output
 

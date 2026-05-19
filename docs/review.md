@@ -59,7 +59,7 @@
 **场景**：用户装完 persona，直接在 vault 中打 `/um`，没先执行 `/go`。
 
 **现状**：
-- um.md 步骤 2 说"If active-scene.json not found → default to daily"
+- um.md 步骤 2 说"If active-scene.json not found → default to research"
 - 但此时 `.persona/` 目录不存在 → profile.md 不存在 → contexts/ 不存在
 - AI 需要处理 3+ 个"文件不存在"的情况
 
@@ -107,7 +107,7 @@
 
 **现状**：
 - go.md 检测 `.obsidian/` 不存在 → 报错退出
-- um.md/aha.md 没有 vault 检测逻辑！直接读 active-scene.json（不存在）→ default to daily → 继续执行但所有文件路径都无效
+- um.md/aha.md 没有 vault 检测逻辑！直接读 active-scene.json（不存在）→ default to research → 继续执行但所有文件路径都无效
 
 **影响**：AI 会尝试读一堆不存在的文件，输出错误或困惑的响应。
 
@@ -118,14 +118,14 @@
 
 ### 问题 8：/new 交互过重
 
-**场景**：用户想快速基于 daily 创建一个变体，被 7 个问题卡住。
+**场景**：用户想快速基于 research 创建一个变体，被 7 个问题卡住。
 
 **现状**：Q1-Q7 每个都要等回复，即使选择了继承也要走 Q4-Q7。
 
 **影响**：创建场景的摩擦力高，用户可能放弃转而手动复制文件。
 
 **建议方案**：
-- 支持快速模式：`/new my-scene --from daily "基于 daily，加上论文阅读相关的动作"`
+- 支持快速模式：`/new my-scene --from research "基于 research，加上论文阅读相关的动作"`
 - 一行搞定：名称 + 继承源 + 一句话差异描述 → AI 自动推断其余
 - 保留完整交互作为 fallback（无参数时）
 
@@ -186,7 +186,7 @@
 | v0.5 | 渐进深入缺失 | um.md Focus/Dive 模式 |
 | v0.5 | Obsidian 原生未整合 | canvas-map + dashboard actions |
 | v0.5 | 场景间无流转 | CLAUDE.md 跨场景建议规则 |
-| v0.5 | daily manifest 缺 obsidian-bases | 补充依赖 |
+| v0.5 | research manifest 依赖完善 | 补充 defuddle |
 | v0.5 | go.md 步骤编号错误 | 修复为 1-14 连续 |
 | v0.5 | active-scene.json 覆盖 last_aha_at | 改为 merge 写入 |
 

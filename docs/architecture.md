@@ -72,12 +72,12 @@ Persona 把这些隐性知识显性化，存成可切换的"人格切片"。
 ┌─────────────────────────────────────────────────────────┐
 │              ~/.claude/persona/ (仓库)                     │
 │                                                           │
-│  ├── scenes/daily/         ← 内置场景                     │
+│  ├── scenes/research/      ← 原子场景                     │
 │  │   ├── manifest.json     ← 依赖声明                    │
 │  │   └── prompts.json      ← 提示词 + actions            │
 │  ├── scenes/coding/                                      │
-│  ├── scenes/patent-writing/                              │
-│  ├── scenes/patent-writing-en/  ← 继承示例               │
+│  ├── scenes/learning/                                    │
+│  ├── scenes/patent-writing/     ← 继承示例               │
 │  ├── registry.json         ← skill/mcp/plugin 注册表     │
 │  ├── install.sh            ← 安装脚本                    │
 │  └── CLAUDE.md             ← system prompt               │
@@ -206,10 +206,10 @@ Skill overlay 距离 AI 最近，优先级最高，不易被上下文截断。
 | um.md | ~1239 tokens | /um 命令执行时加载 |
 | aha.md | ~728 tokens | /aha 命令执行时加载 |
 | go.md | ~1501 tokens | /go 命令执行时加载 |
-| daily prompts.json | ~1555 tokens | 场景 prompt |
+| research prompts.json | ~1800 tokens | 场景 prompt |
 | coding prompts.json | ~1213 tokens | 场景 prompt |
 
-**典型负载**：`/um` + daily 场景 + CLAUDE.md ≈ **4460 tokens**（占 200k 上下文的 **2%**）
+**典型负载**：`/um` + research 场景 + CLAUDE.md ≈ **4700 tokens**（占 200k 上下文的 **2%**）
 
 ---
 
@@ -232,11 +232,10 @@ Skill overlay 距离 AI 最近，优先级最高，不易被上下文截断。
 
 | 场景 | Actions | Skills |
 |------|---------|--------|
-| `daily` | daily-note, weekly-review, health-check, generate-moc, split-note, dashboard, **quick-capture**, **clip-web** | obsidian-markdown, obsidian-cli, obsidian-bases |
+| `research` | explore, collect, compare, synthesize, visualize | obsidian-markdown, obsidian-cli, defuddle, mermaid-visualizer |
 | `coding` | project-note, dev-log, meeting, architecture, canvas-map, **visualize**, **excalidraw** | obsidian-markdown, obsidian-cli, json-canvas, mermaid-visualizer, excalidraw-diagram, obsidian-canvas-creator |
 | `learning` | **setup-vault, quiz, progress, explain, flashcard** | obsidian-markdown, obsidian-cli, tutor-setup, tutor, mermaid-visualizer |
-| `patent-writing` | claim, prior-art, specification, patent-figure | obsidian-markdown, mermaid-visualizer |
-| `patent-writing-en` | claim (覆盖) + 继承父的 3 个 | +defuddle |
+| `patent-writing` | claim, prior-art, specification, patent-figure (inherits: research) | +obsidian-markdown, +mermaid-visualizer |
 
 ---
 

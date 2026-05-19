@@ -88,7 +88,7 @@ AI 会做两件事：
 
 如果用户输入匹配当前场景 `_actions` 中的 trigger 关键词（大小写不敏感），则执行对应 action 的 prompt，而非标准 /um 行为。
 
-示例：在 daily 场景下输入 `/um 拆分` → 匹配 `split-note` action → 执行拆分笔记流程。
+示例：在 research 场景下输入 `/um 对比` → 匹配 `compare` action → 执行对比分析流程。
 
 ---
 
@@ -124,7 +124,7 @@ AI 会做两件事：
 |------|---------|
 | 时间范围（"最近一周"） | 总结该时段产出，生成 review |
 | 项目名 | 项目状态报告：done / pending / at risk |
-| "今天的日记" | 检查今日 daily note，提取未完成任务 |
+| "今天的进展" | 检查最近修改的调研笔记，提取未完成任务 |
 | 其他文本 | 总结 vault 中与该主题相关的一切 |
 
 ### 蒸馏检查
@@ -166,7 +166,7 @@ AI 会做两件事：
 
 ```
 可用场景：
-  daily          — 日常笔记管理
+  research       — 调研探索：信息收集、对比分析、综合报告
   coding         — 编码文档
   patent-writing — 专利撰写
   my-research    — [自建] 文献调研
@@ -189,7 +189,7 @@ AI 会做两件事：
 支持模糊场景名：
 - `code` → `coding`（前缀匹配）
 - `patent` → `patent-writing`（前缀匹配）
-- `daly` → `daily`（编辑距离 ≤ 2）
+- `resarch` → `research`（编辑距离 ≤ 2）
 
 ---
 
@@ -275,7 +275,7 @@ AI 会做两件事：
 ## 命令间协作
 
 ```
-/go daily          ← 进入场景，加载人格
+/go research       ← 进入场景，加载人格
     ↓
 /um                ← 发散：发现方向、外化混乱
     ↓
@@ -291,6 +291,6 @@ AI 会做两件事：
 ```
 
 场景间流转：
-- 在 daily 中讨论代码架构 → AI 建议 `/go coding`
-- 在 coding 中想做日常整理 → AI 建议 `/go daily`
+- 在 research 中讨论代码架构 → AI 建议 `/go coding`
+- 在 coding 中想做调研对比 → AI 建议 `/go research`
 - 只建议不强制，用户忽略则不再重复

@@ -35,10 +35,10 @@ git clone https://github.com/itxaiohanglover/obsidian-harness.git ~/.claude/pers
 ### 典型工作流
 
 ```
-/go daily          ← 进入日常模式
-/um                ← "你改了 3 个文件，要从这些继续还是探索新方向？"
-/um [[架构设计]]    ← 深入这篇笔记，拆分子主题
-/aha               ← "今天写了 2 篇笔记，项目X还差设计文档"
+/go research       ← 进入调研模式
+/um                ← "你在研究3个子课题，信息还缺哪块？"
+/um [[竞品分析]]    ← 深入这篇笔记，拆解对比维度
+/aha               ← "已收集12条信息卡片，可以综合出报告了"
 /distill           ← 把这些天的偏好精炼成画像
 ```
 
@@ -48,15 +48,22 @@ git clone https://github.com/itxaiohanglover/obsidian-harness.git ~/.claude/pers
 
 场景 = 工作人格包。切换场景就是切换思考方式。
 
+### 原子场景（内置）
+
 | 场景 | 你是谁 | 能做什么 |
 |------|--------|---------|
-| `daily` | 知识管理者 | 日记、周报、健康检查、拆分笔记、看板、**闪念秒记**、**网页剪藏** |
+| `research` | 探索者 | 调研拆解、信息收集、对比分析、综合报告、概念可视化 |
 | `coding` | 工程师 | 项目笔记、开发日志、架构图、**可视化三选一**（Mermaid/Canvas/Excalidraw） |
 | `learning` | 学习者 | **资料→学习库**、互动测验、进度追踪、概念解释、闪卡复习 |
-| `patent-writing` | 发明人 | 权利要求、说明书、现有技术检索、专利附图 |
+
+### 继承场景（示例）
+
+| 场景 | 继承自 | 增加什么 |
+|------|--------|---------|
+| `patent-writing` | research | 权利要求书、说明书、现有技术检索、专利附图 |
 
 ```
-/go daily
+/go research
 /go coding
 /go learning
 /go patent-writing
@@ -105,18 +112,25 @@ git clone https://github.com/itxaiohanglover/obsidian-harness.git ~/.claude/pers
 <details>
 <summary>继承机制</summary>
 
+manifest.json 中声明继承：
+
 ```json
 {
-  "_extends": "patent-writing",
-  "_profile": "All output in English. Use USPTO format.",
-  "_um": null,
-  "_aha": null
+  "scene": "patent-writing",
+  "inherits": "research",
+  "description": "专利撰写 — 继承 research，增加权利要求书能力",
+  "requires": {
+    "skills": ["+obsidian-markdown", "+mermaid-visualizer"]
+  }
 }
 ```
+
+prompts.json 中的字段覆盖规则：
 
 - 有值 → 子覆盖父
 - `null` / 缺失 → 继承父
 - `""` → 显式清除
+- requires.skills 中 `+skill-name` 表示在父级基础上追加
 
 最多 3 层继承，自动循环检测。
 

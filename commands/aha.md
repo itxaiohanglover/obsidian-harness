@@ -7,7 +7,7 @@ Converge — summarize progress, crystallize clarity, suggest next step.
    - If `{cwd}/.persona/` does not exist → run onboarding (same as /go step 3: create `.persona/`, `contexts/`, `scenes/`, `profile.md` template). Output: "🎉 首次使用！已创建 .persona/ 目录。"
 1. Read `~/.claude/persona.json` → get `repo_path`
 2. Read `{cwd}/.persona/active-scene.json` → get current scene name
-   - If not found → default to `daily`
+   - If not found → default to `research`
 3. Locate scene directory:
    - First: `{cwd}/.persona/scenes/{name}/`
    - Fallback: `{repo_path}/scenes/{name}/`

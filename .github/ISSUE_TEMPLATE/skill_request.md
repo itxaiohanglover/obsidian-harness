@@ -12,7 +12,7 @@ assignees: ''
 
 **属于哪个场景？**
 - [ ] 新场景（描述你的工作模式）
-- [ ] 已有场景的新 action（指明场景名：daily/coding/patent-writing）
+- [ ] 已有场景的新 action（指明场景名：research/coding/learning/patent-writing）
 - [ ] 核心命令改进（/um /aha /go /distill /new）
 - [ ] 其他
 

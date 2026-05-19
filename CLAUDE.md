@@ -164,9 +164,9 @@ Skill overlay 距离 AI 最近，优先级最高，不易被截断忽略。
 
 | 当前场景 | 触发信号 | 建议 |
 |---------|---------|------|
-| daily | 用户提到具体项目代码/架构 | "这看起来是编码相关的，要 `/go coding` 切换吗？" |
-| daily | 用户开始讨论发明点/技术方案 | "要切到 `/go patent-writing` 写专利吗？" |
-| coding | 用户想做今日回顾/非项目整理 | "这更像日常整理，要 `/go daily` 吗？" |
+| research | 用户提到具体项目代码/架构 | "这看起来是编码相关的，要 `/go coding` 切换吗？" |
+| research | 用户开始讨论学习/理解某个概念 | "要切到 `/go learning` 深入学习吗？" |
+| coding | 用户想做调研/对比分析 | "这更像调研探索，要 `/go research` 吗？" |
 | patent-writing | 用户转向代码实现 | "要 `/go coding` 记录实现细节吗？" |
 
 **规则：**
@@ -180,4 +180,4 @@ Skill overlay 距离 AI 最近，优先级最高，不易被截断忽略。
 当在一个场景中创建的笔记与另一个场景相关时：
 - 在笔记 frontmatter 中标注 `related-scene: coding`（或其他场景名）
 - 这样 /um 扫描时可以发现跨场景关联
-- 例：在 daily 中记录了一个想法，标注 `related-scene: patent-writing`，下次 `/go patent-writing` 后 `/um` 会提示"daily 中有一个和专利相关的想法"
+- 例：在 research 中记录了一个想法，标注 `related-scene: patent-writing`，下次 `/go patent-writing` 后 `/um` 会提示"research 中有一个和专利相关的想法"
