@@ -1,9 +1,13 @@
 {
   "scene": "learning",
-  "description": "学习辅助 — 资料结构化、互动测验、进度追踪、知识可视化",
+  "description": "学习辅助 — 费曼学习法、间隔重复、知识网络、学以致用",
   "requires": {
-    "skills": ["obsidian-markdown", "obsidian-cli", "tutor-setup", "tutor", "mermaid-visualizer"],
+    "skills": ["obsidian-markdown", "obsidian-cli", "mermaid-visualizer"],
     "mcp": [],
     "plugins": []
+  },
+  "recommended": {
+    "skills": ["tutor-setup", "tutor", "defuddle"],
+    "plugins": ["spaced-repetition", "dataview", "calendar", "templater", "excalidraw"]
   }
 }
