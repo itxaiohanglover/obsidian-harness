@@ -1,9 +1,13 @@
 {
   "scene": "research",
-  "description": "调研探索 — 信息收集、文献综述、对比分析、调研报告",
+  "description": "调研探索 — 信息收集、联网搜索、对比分析、综合报告、格式化交付",
   "requires": {
     "skills": ["obsidian-markdown", "obsidian-cli", "defuddle", "mermaid-visualizer"],
-    "mcp": [],
-    "plugins": []
+    "mcp": ["web-search"],
+    "plugins": ["web-clipper"]
+  },
+  "recommended": {
+    "skills": ["humanizer-zh", "excalidraw-diagram"],
+    "plugins": ["calendar", "dataview", "templater"]
   }
 }
