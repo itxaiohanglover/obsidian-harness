@@ -2,23 +2,17 @@ Diverge — externalize chaos, discover directions.
 
 ## Execution Flow
 
+0. **Environment check:**
+   - If `{cwd}/.obsidian/` does not exist → **degraded mode**: skip vault-specific steps (no scene loading, no vault scan). Act as a general divergent assistant using only the user's input. Output: "（当前不在 Obsidian vault 中，通用模式）"
+   - If `{cwd}/.persona/` does not exist → run onboarding (same as /go step 3: create `.persona/`, `contexts/`, `scenes/`, `profile.md` template). Output: "🎉 首次使用！已创建 .persona/ 目录。"
 1. Read `~/.claude/persona.json` → get `repo_path`
 2. Read `{cwd}/.persona/active-scene.json` → get current scene name
    - If not found → default to `daily`
 3. Locate scene directory:
    - First: `{cwd}/.persona/scenes/{name}/`
    - Fallback: `{repo_path}/scenes/{name}/`
-4. Read `prompts.json` → check `_extends` field
-   - If `_extends` is not null:
-     a. Locate parent scene (local > builtin)
-     b. Recursively resolve (if parent also has `_extends`)
-     c. Depth check: chain > 3 → error "继承链过深（最多 3 层）"
-     d. Cycle check: name repeats → error "继承循环"
-     e. Merge — scalars: child wins / null inherits / "" clears;
-        _actions: key-level merge `{...parent, ...child}` (null removes);
-        _memory: concat + dedupe
-     f. Use merged result
-   - Extract `_um`, `_profile`, `_memory`, `_actions` from (merged) result
+4. Read `prompts.json` → resolve inheritance if `_extends` is set (rules in CLAUDE.md "场景继承" section)
+   - Extract `_um`, `_profile`, `_memory`, `_actions` from resolved/merged result
 5. Read `{cwd}/.persona/contexts/{scene}.md` → inject context variables
 6. Read `{cwd}/.persona/profile.md` → inject global persona
 7. Compose: global profile + scene `_profile` + `_um` prompt + context + `_memory`
@@ -26,23 +20,20 @@ Diverge — externalize chaos, discover directions.
 
 ## Behavior — No Input
 
-User doesn't know where to start. Detect changes first, then explore:
+User doesn't know where to start. Lightweight detection first:
 
-1. **Change detection** — read `{cwd}/.persona/active-scene.json` → get `activated_at` timestamp
+1. **Change detection** (lightweight, always first) — read `{cwd}/.persona/active-scene.json` → get `activated_at`
    - Find `.md` files modified since `activated_at` (exclude `.obsidian/`, `.persona/`)
-   - If changes found → prioritize these: "自上次切换后，你改了 N 个文件：[[A]]、[[B]]..."
-   - Ask: "要从这些变更继续，还是探索新方向？"
-2. If no changes (or user picks "探索") → scan vault for signals:
-   - Orphan notes (no backlinks)
-   - Untagged notes
-   - Stale notes (not modified in 30+ days)
-   - Broken wikilinks
-   - Unchecked tasks (`- [ ]`)
-3. Present 2-3 directional questions (not solutions):
-   - "你有 N 个未打标签的笔记，要整理吗？"
-   - "项目X的笔记上次更新是N天前，要跟进吗？"
-   - "最近写了 N 篇零散想法，要合并成一篇？"
-4. Wait for user to pick — do NOT act without their choice
+   - If changes found → show them and stop here:
+     "自上次切换后，你改了 N 个文件：[[A]]、[[B]]..."
+     "要从这些变更继续，还是探索新方向？"
+   - Wait for user choice. Do NOT proceed to step 2 automatically.
+2. **Quick signal** (only if no changes, or user picks "探索") — pick ONE most actionable signal:
+   - Priority: unchecked tasks (`- [ ]`) > stale project notes (>14 days) > orphan notes
+   - Present ONE directional question, not a list of 5:
+     "你有 3 个未完成任务在 [[项目X]] 中，要跟进吗？"
+   - If nothing found → "vault 状态良好，想探索什么新方向？"
+3. Wait for user to pick — do NOT act without their choice
 
 ## Behavior — With Input
 

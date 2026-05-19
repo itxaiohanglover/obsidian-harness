@@ -2,23 +2,17 @@ Converge — summarize progress, crystallize clarity, suggest next step.
 
 ## Execution Flow
 
+0. **Environment check:**
+   - If `{cwd}/.obsidian/` does not exist → **degraded mode**: skip vault-specific steps (no scene loading, no vault scan). Act as a general convergent assistant — summarize what user has been working on based on conversation context only. Output: "（当前不在 Obsidian vault 中，通用模式）"
+   - If `{cwd}/.persona/` does not exist → run onboarding (same as /go step 3: create `.persona/`, `contexts/`, `scenes/`, `profile.md` template). Output: "🎉 首次使用！已创建 .persona/ 目录。"
 1. Read `~/.claude/persona.json` → get `repo_path`
 2. Read `{cwd}/.persona/active-scene.json` → get current scene name
    - If not found → default to `daily`
 3. Locate scene directory:
    - First: `{cwd}/.persona/scenes/{name}/`
    - Fallback: `{repo_path}/scenes/{name}/`
-4. Read `prompts.json` → check `_extends` field
-   - If `_extends` is not null:
-     a. Locate parent scene (local > builtin)
-     b. Recursively resolve (if parent also has `_extends`)
-     c. Depth check: chain > 3 → error "继承链过深（最多 3 层）"
-     d. Cycle check: name repeats → error "继承循环"
-     e. Merge — scalars: child wins / null inherits / "" clears;
-        _actions: key-level merge `{...parent, ...child}` (null removes);
-        _memory: concat + dedupe
-     f. Use merged result
-   - Extract `_aha`, `_profile`, `_memory`, `_actions` from (merged) result
+4. Read `prompts.json` → resolve inheritance if `_extends` is set (rules in CLAUDE.md "场景继承" section)
+   - Extract `_aha`, `_profile`, `_memory`, `_actions` from resolved/merged result
 5. Read `{cwd}/.persona/contexts/{scene}.md` → inject context variables
 6. Read `{cwd}/.persona/profile.md` → inject global persona
 7. Compose: global profile + scene `_profile` + `_aha` prompt + context + `_memory`
@@ -47,13 +41,16 @@ Input is a scope modifier:
 | "今天的日记" | Review today's daily note, surface unfinished tasks |
 | Other text | Summarize everything in vault related to that topic |
 
-## Distillation Check (End of Every Execution)
+## Distillation Check (Explicit Trigger Only)
 
-After completing the convergence task, review the current session:
+Do NOT proactively review the entire session for corrections. Only act on explicit signals:
 
-- If user corrected AI output → ask: "要记住这个偏好吗？"
+- If user said "记住..." or "remember..." → immediately append to `_memory`
+- If user explicitly said "不是"/"错了"/"别这样" to correct AI output in this turn → ask once: "要记住这个偏好吗？"
 - If user confirmed → append to `prompts.json._memory` array
-- If user said "记住..." explicitly → immediately append to `_memory`
+- If _memory has 5+ entries → add one line at end of output: "💡 已积累 {count} 条记忆，随时可以 /distill 精炼画像。"
+
+Do NOT scan session history looking for implicit corrections. Keep it lightweight.
 
 ## Rules
 

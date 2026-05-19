@@ -1,6 +1,36 @@
 Create a new scene — guided interactive setup.
 
-## Execution Flow
+## Quick Mode
+
+When user provides `--from`: `/new <name> --from <parent> "<description>"`
+
+Example: `/new patent-cn --from patent-writing "中文专利，使用国知局格式"`
+
+In quick mode:
+1. Read `~/.claude/persona.json` → get `repo_path`
+2. Validate name (lowercase, hyphens, no conflict)
+3. Locate parent scene → read its prompts.json and manifest.json
+4. Auto-generate child scene:
+   - `_extends`: parent name
+   - `_profile`: generated from description (e.g. "所有输出使用国知局格式...")
+   - `_um`: null (inherit)
+   - `_aha`: null (inherit)
+   - `_memory`: []
+   - `_actions`: {} (inherit all from parent)
+   - manifest: `"skills": []` (inherit parent's via +)
+5. Create files in `{cwd}/.persona/scenes/{name}/`
+6. Create context template `{cwd}/.persona/contexts/{name}.md`
+7. Output: "✓ 场景 {name} 已创建（继承自 {parent}）！用 `/go {name} --dry-run` 查看完整组合。"
+
+Quick mode skips all interactive questions — one command, done.
+
+---
+
+## Full Interactive Mode
+
+When no `--from` provided: `/new`
+
+### Execution Flow
 
 1. Read `~/.claude/persona.json` → get `repo_path`
 2. Read `{repo_path}/registry.json` → get available skills/mcp/plugins
