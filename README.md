@@ -50,13 +50,15 @@ git clone https://github.com/itxaiohanglover/obsidian-harness.git ~/.claude/pers
 
 | 场景 | 你是谁 | 能做什么 |
 |------|--------|---------|
-| `daily` | 知识管理者 | 日记、周报、vault 健康检查、拆分笔记、生成看板 |
-| `coding` | 工程师 | 项目笔记、开发日志、架构图、Canvas 可视化 |
+| `daily` | 知识管理者 | 日记、周报、健康检查、拆分笔记、看板、**闪念秒记**、**网页剪藏** |
+| `coding` | 工程师 | 项目笔记、开发日志、架构图、**可视化三选一**（Mermaid/Canvas/Excalidraw） |
+| `learning` | 学习者 | **资料→学习库**、互动测验、进度追踪、概念解释、闪卡复习 |
 | `patent-writing` | 发明人 | 权利要求、说明书、现有技术检索、专利附图 |
 
 ```
 /go daily
 /go coding
+/go learning
 /go patent-writing
 ```
 

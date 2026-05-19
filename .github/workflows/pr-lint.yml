@@ -21,8 +21,11 @@ jobs:
             refactor
             test
             chore
+            ci
+            build
+            perf
           requireScope: false
-          subjectPattern: ^[A-Z].+$
+          subjectPattern: ^.+$
           subjectPatternError: |
-            Subject must start with a capital letter.
-            Example: "feat: Add memory-sync module"
+            Subject must not be empty.
+            Example: "feat: add learning scene"
