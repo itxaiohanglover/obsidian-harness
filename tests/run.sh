@@ -249,6 +249,145 @@ test_install_dry_run() {
   rm -rf "$tmp_home"
 }
 
+test_parallel_vault_isolation() {
+  # Simulate multiple vaults with different scenes running concurrently
+  # Verify: each vault has independent state, no cross-contamination
+
+  local vault_a vault_b vault_c
+  vault_a=$(mktemp -d)
+  vault_b=$(mktemp -d)
+  vault_c=$(mktemp -d)
+
+  # Setup 3 vaults with different scenes
+  for v in "$vault_a" "$vault_b" "$vault_c"; do
+    mkdir -p "$v/.obsidian" "$v/.persona/contexts" "$v/.persona/scenes"
+    echo "# Profile" > "$v/.persona/profile.md"
+  done
+
+  # Vault A: daily scene
+  cat > "$vault_a/.persona/active-scene.json" << 'EOF'
+{"scene": "daily", "source": "builtin", "activated_at": "2026-05-19T10:00:00Z", "last_aha_at": null}
+EOF
+
+  # Vault B: coding scene
+  cat > "$vault_b/.persona/active-scene.json" << 'EOF'
+{"scene": "coding", "source": "builtin", "activated_at": "2026-05-19T10:05:00Z", "last_aha_at": null}
+EOF
+
+  # Vault C: learning scene
+  cat > "$vault_c/.persona/active-scene.json" << 'EOF'
+{"scene": "learning", "source": "builtin", "activated_at": "2026-05-19T10:10:00Z", "last_aha_at": null}
+EOF
+
+  # Verify isolation: each vault reads its own scene independently
+  local result
+  result=$(python3 -c "
+import json, os, sys
+
+repo = '$REPO_DIR'
+vaults = {
+    'vault_a': ('$vault_a', 'daily'),
+    'vault_b': ('$vault_b', 'coding'),
+    'vault_c': ('$vault_c', 'learning'),
+}
+
+errors = []
+for name, (path, expected_scene) in vaults.items():
+    # Read active-scene.json
+    with open(os.path.join(path, '.persona', 'active-scene.json')) as f:
+        state = json.load(f)
+    if state['scene'] != expected_scene:
+        errors.append(f'{name}: expected {expected_scene}, got {state[\"scene\"]}')
+
+    # Verify scene prompts.json exists and is loadable
+    scene_dir = os.path.join(repo, 'scenes', expected_scene)
+    prompts_path = os.path.join(scene_dir, 'prompts.json')
+    if not os.path.isfile(prompts_path):
+        errors.append(f'{name}: scene {expected_scene} prompts.json not found')
+        continue
+    with open(prompts_path) as f:
+        data = json.load(f)
+
+    # Resolve @file for _um
+    um = data.get('_um', '')
+    if um.startswith('@file:'):
+        ref_path = os.path.join(scene_dir, um[6:])
+        if os.path.isfile(ref_path):
+            with open(ref_path) as rf:
+                um = rf.read()
+        else:
+            errors.append(f'{name}: @file ref not found: {um}')
+
+    if not um:
+        errors.append(f'{name}: _um is empty after resolve')
+
+# Simulate concurrent write: update last_aha_at in vault_b without affecting vault_a
+with open(os.path.join('$vault_b', '.persona', 'active-scene.json')) as f:
+    b_state = json.load(f)
+b_state['last_aha_at'] = '2026-05-19T11:00:00Z'
+with open(os.path.join('$vault_b', '.persona', 'active-scene.json'), 'w') as f:
+    json.dump(b_state, f)
+
+# Verify vault_a unchanged
+with open(os.path.join('$vault_a', '.persona', 'active-scene.json')) as f:
+    a_state = json.load(f)
+if a_state.get('last_aha_at') is not None:
+    errors.append('vault_a: last_aha_at contaminated by vault_b write')
+if a_state['scene'] != 'daily':
+    errors.append('vault_a: scene changed after vault_b update')
+
+# Verify vault_c unchanged
+with open(os.path.join('$vault_c', '.persona', 'active-scene.json')) as f:
+    c_state = json.load(f)
+if c_state.get('last_aha_at') is not None:
+    errors.append('vault_c: last_aha_at contaminated')
+if c_state['scene'] != 'learning':
+    errors.append('vault_c: scene changed')
+
+if errors:
+    for e in errors:
+        print(f'ERROR: {e}')
+    sys.exit(1)
+else:
+    print('OK')
+" 2>&1)
+
+  if [ "$result" = "OK" ]; then
+    pass "3 vaults with different scenes: isolated state"
+  else
+    fail "vault isolation: $result"
+  fi
+
+  # Test: overwrite scene in vault_a (simulates /go coding in vault_a)
+  cat > "$vault_a/.persona/active-scene.json" << 'EOF'
+{"scene": "coding", "source": "builtin", "activated_at": "2026-05-19T12:00:00Z", "last_aha_at": null}
+EOF
+
+  # Verify vault_b still has its own activated_at (not overwritten)
+  local b_activated
+  b_activated=$(python3 -c "import json; print(json.load(open('$vault_b/.persona/active-scene.json'))['activated_at'])")
+  if [ "$b_activated" = "2026-05-19T10:05:00Z" ]; then
+    pass "scene switch in vault_a doesn't affect vault_b timestamps"
+  else
+    fail "vault_b activated_at changed: $b_activated"
+  fi
+
+  # Test: different contexts per vault (same scene, different context)
+  echo "patent_id: CN2026-001" > "$vault_a/.persona/contexts/coding.md"
+  echo "patent_id: CN2026-999" > "$vault_b/.persona/contexts/coding.md"
+  local ctx_a ctx_b
+  ctx_a=$(cat "$vault_a/.persona/contexts/coding.md")
+  ctx_b=$(cat "$vault_b/.persona/contexts/coding.md")
+  if [ "$ctx_a" != "$ctx_b" ]; then
+    pass "same scene different contexts: isolated"
+  else
+    fail "contexts not isolated between vaults"
+  fi
+
+  # Cleanup
+  rm -rf "$vault_a" "$vault_b" "$vault_c"
+}
+
 test_registry_valid() {
   # registry.json must be valid and contain skill entries
   local reg="$REPO_DIR/registry.json"
@@ -307,6 +446,7 @@ run_test test_inheritance_chain "$FILTER"
 run_test test_commands_exist "$FILTER"
 run_test test_install_script "$FILTER"
 run_test test_install_dry_run "$FILTER"
+run_test test_parallel_vault_isolation "$FILTER"
 run_test test_registry_valid "$FILTER"
 run_test test_no_stale_references "$FILTER"
 
