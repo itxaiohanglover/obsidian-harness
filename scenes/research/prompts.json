@@ -1,0 +1,46 @@
+{
+  "_meta": {
+    "name": "research",
+    "description": "调研探索：信息收集、文献综述、对比分析、调研报告",
+    "author": "persona",
+    "version": "0.5.0",
+    "tags": ["调研", "探索", "分析", "综述"]
+  },
+  "_extends": null,
+  "_profile": "",
+  "_um": "@file:um-prompt.md",
+  "_aha": "@file:aha-prompt.md",
+  "_memory": [],
+  "_actions": {
+    "explore": {
+      "description": "拆解调研课题，列出探索维度",
+      "trigger": ["调研", "explore", "研究", "课题", "主题"],
+      "prompt": "拆解调研课题：\n1. 明确核心问题（用户给出主题 or 从 context 推断）\n2. 拆解为 3-5 个子问题/维度\n3. 每个维度列出：需要回答什么、可能的信息来源、优先级\n4. 创建调研主题笔记 {Topic} Research.md，含 frontmatter(status: active, created, tags:[research])\n5. 结构：## 核心问题 + ## 子问题 + ## 信息来源 + ## 发现 + ## 结论\n6. 链接到已有的相关笔记"
+    },
+    "collect": {
+      "description": "收集和归档调研信息",
+      "trigger": ["收集", "collect", "归档", "记录", "摘要"],
+      "prompt": "收集调研信息：\n1. 如果是 URL → 用 defuddle 提取干净内容\n2. 如果是文本块 → 提取核心论点和数据\n3. 创建信息卡片：一个卡片一个论点\n4. 卡片格式：## {论点标题}\\n来源: {source}\\n日期: {date}\\n---\\n{内容摘要}\\n---\\n**评价**: {可信度/相关度}\n5. 归档到对应主题笔记的 ## 发现 下\n6. 更新主题笔记的信息充分度判断"
+    },
+    "compare": {
+      "description": "多维度对比分析",
+      "trigger": ["对比", "compare", "比较", "versus", "vs"],
+      "prompt": "生成对比分析：\n1. 确定对比对象（2-N 个方案/产品/技术/概念）\n2. 确定对比维度（从已有调研信息中提取，或询问用户）\n3. 生成对比表格：行=维度，列=对象\n4. 每个单元格标注信息来源\n5. 表格后附：各对象优劣势总结 + 适用场景建议\n6. 保存为 {Topic} Comparison.md 或追加到主题笔记"
+    },
+    "synthesize": {
+      "description": "综合信息生成调研报告",
+      "trigger": ["综合", "synthesize", "报告", "report", "结论", "总结"],
+      "prompt": "生成调研报告：\n1. 汇总该主题所有调研卡片和笔记\n2. 结构：\n   - ## 摘要（一段话总结核心发现）\n   - ## 问题定义（调研背景和目标）\n   - ## 调研方法（信息来源和范围）\n   - ## 关键发现（按维度组织，每个发现标注来源）\n   - ## 对比分析（如有多个方案）\n   - ## 结论与建议（区分事实和推测）\n   - ## 信息缺口（哪些问题尚未回答）\n3. 用 Mermaid 画概念关系图\n4. 保存为 {Topic} Report.md"
+    },
+    "visualize": {
+      "description": "可视化调研发现（概念图/关系图）",
+      "trigger": ["可视化", "图表", "关系图", "概念图", "map"],
+      "prompt": "可视化调研发现：\n1. 分析已有调研笔记中的概念和关系\n2. 选择最合适的可视化方式：\n   - 概念关系 → Mermaid mindmap 或 flowchart\n   - 时间线 → Mermaid timeline\n   - 层级结构 → Mermaid flowchart TD\n3. 节点=核心概念，边=关系（标注关系类型）\n4. 嵌入到调研主题笔记中\n5. 如果关系复杂，建议拆分为多张图"
+    }
+  },
+  "_loop_template": null,
+  "obsidian-markdown": "调研笔记用 {Topic} Research.md 命名。信息卡片用 callout：>[!source] 来源标注。结论用 >[!conclusion]。未验证信息用 >[!warning] 标记。链接用 [[wikilinks]]。",
+  "obsidian-cli": "优先用 obsidian-cli 搜索 vault 中已有的调研笔记。用 properties 追踪 status 字段（active/completed）。",
+  "defuddle": "从 URL 提取内容时优先使用 defuddle 获取干净 markdown，减少 token 消耗。提取后标注来源 URL 和日期。",
+  "mermaid-visualizer": "调研概念图用 mindmap 或 flowchart。节点标签简短（2-4 字）。关系类型标注在边上。颜色区分：已验证=绿、待验证=黄、存疑=红。"
+}

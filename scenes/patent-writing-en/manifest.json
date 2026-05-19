@@ -1,9 +1,0 @@
-{
-  "scene": "patent-writing-en",
-  "description": "English patent writing — inherits patent-writing, all output in English",
-  "requires": {
-    "skills": ["+defuddle"],
-    "mcp": [],
-    "plugins": []
-  }
-}

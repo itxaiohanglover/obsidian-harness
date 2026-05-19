@@ -1,8 +1,9 @@
 {
   "scene": "patent-writing",
-  "description": "专利撰写 — 技术方案文档化、权利要求书、现有技术检索",
+  "inherits": "research",
+  "description": "专利撰写 — 继承 research，增加权利要求书、说明书、专利附图能力",
   "requires": {
-    "skills": ["obsidian-markdown", "mermaid-visualizer"],
+    "skills": ["+obsidian-markdown", "+mermaid-visualizer"],
     "mcp": [],
     "plugins": []
   }

@@ -1,0 +1,9 @@
+{
+  "scene": "research",
+  "description": "调研探索 — 信息收集、文献综述、对比分析、调研报告",
+  "requires": {
+    "skills": ["obsidian-markdown", "obsidian-cli", "defuddle", "mermaid-visualizer"],
+    "mcp": [],
+    "plugins": []
+  }
+}

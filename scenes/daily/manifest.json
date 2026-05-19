@@ -1,9 +1,0 @@
-{
-  "scene": "daily",
-  "description": "日常笔记管理 — 日记、知识库维护、vault 整理",
-  "requires": {
-    "skills": ["obsidian-markdown", "obsidian-cli", "obsidian-bases"],
-    "mcp": [],
-    "plugins": []
-  }
-}
