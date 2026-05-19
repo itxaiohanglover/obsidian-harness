@@ -62,7 +62,23 @@ Switch scene — enter a different work persona.
     ```json
     {"scene": "{name}", "source": "builtin|local", "activated_at": "{ISO timestamp}", "last_aha_at": "{preserved or null}"}
     ```
-14. Output confirmation:
+14. **Recommended plugins check** (first time per scene only):
+    - If `.persona/contexts/{name}.md` does not contain `plugins_suggested: true`:
+      - Based on scene's skills, suggest Obsidian plugins that enhance the experience:
+        - obsidian-cli → "确保 Obsidian 在后台运行（CLI 需要通信）"
+        - obsidian-bases → "推荐安装 Bases 插件查看 .base 文件"
+        - tutor/tutor-setup → "建议安装 Templater 配合模板使用"
+        - excalidraw-diagram → "建议安装 Excalidraw 插件查看 .excalidraw 文件"
+        - json-canvas/obsidian-canvas-creator → "Canvas 为 Obsidian 内置功能，无需额外安装"
+        - Any scene → "推荐：Homepage（首页入口）、QuickAdd（快速记录）、Obsidian Git（自动同步）"
+      - Output as a collapsible tip (only shown once):
+        ```
+        💡 首次使用提示：
+        - 确保 Obsidian 在后台运行（obsidian-cli 需要通信）
+        - 推荐插件：Homepage、QuickAdd、Obsidian Git
+        ```
+      - Append `plugins_suggested: true` to context file (or create it)
+15. Output confirmation:
     ```
     ✓ 已切换到 {name}。
     可用动作：{action1}（描述）、{action2}（描述）

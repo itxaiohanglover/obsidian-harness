@@ -41,6 +41,16 @@
       "description": "创建 Bases 数据视图（项目/任务/笔记看板）",
       "trigger": ["看板", "dashboard", "视图", "bases", "表格视图", "卡片视图"],
       "prompt": "创建 Bases 数据视图：\n1. 询问用户想看什么视图（项目总览/任务追踪/笔记索引/自定义）\n2. 根据选择生成 .base 文件：\n   - 项目总览：filters by tag #project, table view with status/created/updated\n   - 任务追踪：filters '- [ ]' or '- [x]', table view with file/status/due\n   - 笔记索引：filters by folder or tag, cards view with preview\n3. 文件名：{ViewName}.base\n4. 配置合适的 filters、formulas（如 days-since-modified）、views\n5. 提示用户在 Obsidian 中打开 .base 文件查看效果"
+    },
+    "quick-capture": {
+      "description": "闪念秒记 — 零摩擦快速捕获想法",
+      "trigger": ["记一下", "想法", "capture", "闪念", "快速记录", "灵感", "随手记"],
+      "prompt": "零摩擦快速捕获：\n1. 将用户输入的内容直接追加到今日日记的 ## Notes 区域\n2. 优先用 obsidian-cli: `obsidian daily:append content=\"- {用户输入}\"`\n3. 如果 Obsidian 未运行，回退到直接写文件（找到今日 YYYY-MM-DD.md）\n4. 如果今日日记不存在，先用 daily-note action 创建\n5. 追加格式：`- {HH:mm} {内容}`（带时间戳）\n6. 完成后一句话确认：\"✓ 已记录到今日日记。\" 不要多余输出\n7. 如果内容较长（>100字），建议创建独立笔记并在日记中链接"
+    },
+    "clip-web": {
+      "description": "剪藏网页内容到 vault",
+      "trigger": ["剪藏", "clip", "保存网页", "网页", "收藏", "存一下这个链接"],
+      "prompt": "剪藏网页内容：\n1. 从用户输入中提取 URL\n2. 用 defuddle 提取干净的 Markdown 内容\n3. 创建笔记：{Article Title}.md，放入收集箱（01_收集箱 或 Inbox）\n4. Frontmatter: source: {url}, created: {date}, tags: [web-clip]\n5. 正文为提取的内容，保留标题结构\n6. 在今日日记追加一行链接：`- 剪藏 [[{Article Title}]]`\n7. 提示：\"✓ 已保存到 [[{Article Title}]]。要整理标签或摘要吗？\""
     }
   },
   "_loop_template": null,

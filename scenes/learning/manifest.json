@@ -1,0 +1,9 @@
+{
+  "scene": "learning",
+  "description": "学习辅助 — 资料结构化、互动测验、进度追踪、知识可视化",
+  "requires": {
+    "skills": ["obsidian-markdown", "obsidian-cli", "tutor-setup", "tutor", "mermaid-visualizer"],
+    "mcp": [],
+    "plugins": []
+  }
+}

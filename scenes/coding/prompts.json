@@ -34,8 +34,18 @@
     },
     "canvas-map": {
       "description": "生成项目可视化 Canvas（模块关系图）",
-      "trigger": ["canvas", "画布", "可视化", "visual map", "模块图"],
+      "trigger": ["canvas", "画布", "visual map", "模块图"],
       "prompt": "生成项目 Canvas 可视化：\n1. 分析项目模块（从架构文档或目录结构推断）\n2. 创建 {Project} Map.canvas 文件\n3. 每个模块一个节点：type=text, 内容为模块名+一句话职责\n4. 节点颜色约定：active=color \"4\"(绿), paused=color \"2\"(黄), completed=color \"5\"(灰)\n5. 模块间依赖用 edge 连接，箭头方向=调用方向\n6. 布局：核心模块居中，辅助模块环绕，间距 200px\n7. 生成 16 字符 hex ID，确保唯一\n8. 如果 canvas 已存在，读取后增量更新而非覆盖"
+    },
+    "visualize": {
+      "description": "可视化（自动选择最佳工具：Mermaid/Canvas/Excalidraw）",
+      "trigger": ["可视化", "画图", "图表", "diagram", "visualize", "画个图"],
+      "prompt": "根据需求自动选择可视化工具：\n\n## 选择逻辑\n- 需要在 Obsidian 中拖拽编辑、节点可链接笔记 → Canvas（obsidian-canvas-creator）\n- 需要正式的结构化图表（流程图/时序图/类图/状态图）→ Mermaid（mermaid-visualizer）\n- 需要手绘风格、做演示分享、或动画展示 → Excalidraw（excalidraw-diagram）\n\n## 执行\n1. 分析用户需求，选择最合适的工具\n2. 如果不确定，简短询问：\"要正式的结构图(Mermaid)、可编辑白板(Canvas)、还是手绘风格(Excalidraw)？\"\n3. 按所选工具生成对应格式的文件\n4. Canvas → .canvas 文件；Mermaid → 嵌入 md 代码块；Excalidraw → .excalidraw 文件\n5. 输出完成后提示用户在 Obsidian 中打开查看"
+    },
+    "excalidraw": {
+      "description": "生成 Excalidraw 手绘风格图表",
+      "trigger": ["excalidraw", "手绘", "手绘图", "sketch", "手绘风格"],
+      "prompt": "生成 Excalidraw 手绘风格图表：\n1. 分析用户需求（流程图/思维导图/架构图/时间线/层级图）\n2. 使用 excalidraw-diagram skill 生成 .excalidraw 文件\n3. 支持三种输出模式（默认用 Obsidian 模式）：\n   - Obsidian 模式：直接在库里打开编辑\n   - 标准模式：可在 excalidraw.com 编辑\n   - 动画模式：内容按步骤逐个出现（分享/复盘用）\n4. 节点内容使用中文标签\n5. 文件保存到 Excalidraw/ 文件夹（如果存在）\n6. 在当前笔记中嵌入：![[{filename}.excalidraw]]"
     }
   },
   "_loop_template": null,
