@@ -236,3 +236,149 @@ Skill overlay 距离 AI 最近，优先级最高，不易被上下文截断。
 | `coding` | project-note, dev-log, meeting, architecture, canvas-map | obsidian-markdown, obsidian-cli, json-canvas |
 | `patent-writing` | claim, prior-art, specification, patent-figure | obsidian-markdown, mermaid-visualizer |
 | `patent-writing-en` | claim (覆盖) + 继承父的 3 个 | +defuddle |
+
+---
+
+## 完整字段规范
+
+### prompts.json
+
+```jsonc
+{
+  // ─── 元信息 ───
+  "_meta": {
+    "name": "patent-writing",
+    "description": "专利撰写场景",
+    "author": "xinhai",
+    "version": "1.0.0",
+    "tags": ["专利", "技术写作", "知识产权"]
+  },
+
+  // ─── 继承 ───
+  "_extends": null,               // 父场景名，null = 无继承
+
+  // ─── 场景级 Prompt（支持 @file 引用）───
+  "_profile": "...",              // 我的个人画像和风格
+  "_um": "@file:um-prompt.md",   // 发散行为定义（可内联或 @file）
+  "_aha": "@file:aha-prompt.md", // 收敛行为定义（可内联或 @file）
+
+  // ─── 用户记忆 ───
+  "_memory": [                    // 用户告诉 AI 记住的东西
+    "我喜欢用中文写专利",
+    "权利要求书先写独立权利要求再写从属"
+  ],
+
+  // ─── 场景专属动作 ───
+  "_actions": {
+    "claim": {
+      "description": "生成或优化权利要求书",
+      "trigger": ["写权利要求", "claim", "权利要求"],
+      "prompt": "读取 context.md 中的 patent_id..."
+    }
+  },
+
+  // ─── 自主循环模板（预留，暂不激活） ───
+  "_loop_template": null,
+
+  // ─── Skill Overlays ───
+  "mermaid-visualizer": "专利附图风格：方框图为主...",
+  "obsidian-markdown": "专利文档结构：技术领域→背景技术→..."
+}
+```
+
+**职责分界：**
+- `prompts.json` = "怎么做"（prompt、style、actions）
+- `contexts/{scene}.md` = "在做什么"（当前项目、变量、背景）
+
+### manifest.json
+
+```jsonc
+{
+  "scene": "patent-writing",
+  "description": "专利撰写场景依赖",
+  "requires": {
+    "skills": ["mermaid-visualizer", "obsidian-markdown"],
+    "mcp": [],
+    "plugins": []
+  },
+  "sources": {                   // 覆盖 registry.json 的默认安装源
+    "hw-template-skill": {
+      "install": "npx skills add git@github.com:corp/hw-skills.git"
+    }
+  }
+}
+```
+
+继承场景的 manifest 中，`+` 前缀表示追加到父列表：
+```jsonc
+{ "requires": { "skills": ["+defuddle"] } }  // 在父的基础上追加
+```
+
+### active-scene.json
+
+存储在 `{vault}/.persona/active-scene.json`：
+
+```jsonc
+{
+  "scene": "patent-writing",
+  "source": "builtin",                // "builtin" 或 "local"
+  "activated_at": "2026-05-18T20:00:00Z",
+  "last_aha_at": "2026-05-18T22:30:00Z"  // /aha 更新
+}
+```
+
+### persona.json
+
+存储在 `~/.claude/persona.json`：
+
+```jsonc
+{
+  "version": "0.5.0",
+  "installed_at": "2026-05-18T20:00:00Z",
+  "repo_path": "/Users/xinhai/.claude/persona",
+  "vaults": [],
+  "command_names": { "um": "um", "aha": "aha", "go": "go", "distill": "distill", "new": "new" }
+}
+```
+
+### _memory 数据结构
+
+当前使用简化版（字符串数组）：
+
+```jsonc
+{ "_memory": ["权利要求用「其特征在于」", "架构图节点间距大一些"] }
+```
+
+未来可升级为结构化格式（向后兼容）：
+
+```jsonc
+{
+  "_memory": [
+    { "content": "权利要求用「其特征在于」", "source": "user_explicit", "created": "2026-05-18" }
+  ]
+}
+```
+
+---
+
+## 设计边界
+
+### 明确不解决的问题
+
+| 问题 | 原因 |
+|------|------|
+| 多人同时编辑同一 vault 的 prompts.json | Obsidian vault 是个人工具，非协作场景 |
+| 跨设备同步 | 用户用 git/iCloud 同步 vault 即可 |
+| Skill 之间的执行顺序 | Skill 是独立的，不是 pipeline |
+| prompts.json 加密 | 文件在本地，无需加密 |
+| 多终端并发场景隔离 | by design: 一个 vault 同一时刻只有一个活跃场景，多场景用多 vault |
+
+### 已验证的设计决策
+
+| 决策 | 理由 |
+|------|------|
+| _memory 先用字符串数组 | 简单够用，量大了再升级 |
+| Skill overlay 放在 prompts.json 里而非独立文件 | 与场景绑定，切换即生效 |
+| context.md 不自动保存 | 用户手动 + /aha 时间戳已够用 |
+| _actions 用 trigger 关键词而非正则 | 降低配置门槛，精确匹配足够 |
+| 最多 3 层继承 | 超过 3 层人类无法理解合并结果 |

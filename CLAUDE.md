@@ -40,6 +40,27 @@
 - `manifest.json` — 依赖声明（skills、mcp、plugins）
 - `prompts.json` — 提示词（`_um`、`_aha`、`_profile`、`_memory`、`_actions`、skill overlays）
 
+### @file 引用
+
+prompts.json 中的字符串字段支持 `@file:` 前缀引用外部 markdown 文件：
+
+```json
+{
+  "_um": "@file:um-prompt.md",
+  "_aha": "@file:aha-prompt.md",
+  "_profile": "@file:profile.md"
+}
+```
+
+**解析规则：**
+- 路径相对于 prompts.json 所在目录（即场景目录）
+- 读取文件内容作为该字段的值
+- 如果文件不存在 → 报错："@file 引用找不到：{path}"
+- 只有字符串字段支持（`_um`, `_aha`, `_profile`, skill overlays）
+- `_actions`、`_memory`、`_meta` 不支持 @file
+
+**优势：** 用户可以在 markdown 编辑器中编辑 prompt，避免 JSON 转义的可读性问题。
+
 ## 场景继承
 
 如果 `prompts.json._extends` 不为 null，按以下规则解析：
@@ -70,10 +91,12 @@
 
 ## 渐进蒸馏
 
-- 用户说"记住..." → 立即存入 `prompts.json._memory` 数组
-- 用户纠正 AI 输出 → 提示"要记住这个偏好吗？"
+- 用户说"记住..."/"remember..." → 立即存入 `prompts.json._memory` 数组
+- 用户明确纠正 AI（说"不是"/"错了"/"别这样"）→ 问一次"要记住这个偏好吗？"
 - 用户确认 → 追加到 `_memory`
+- 不主动回顾 session 寻找隐式纠正，保持轻量
 - `/distill` → 分析 `_memory` 模式，精炼为 `_profile`
+- 当 `_memory` 有 5+ 条时，提示用户可以 `/distill`
 
 ## Prompt 组合顺序（优先级从高到低）
 

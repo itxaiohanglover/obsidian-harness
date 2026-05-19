@@ -29,7 +29,7 @@ Switch scene — enter a different work persona.
    - Fallback: `{repo_path}/scenes/{name}/`
    - Not found → fuzzy match (exact > prefix > edit distance ≤ 2)
    - Still not found → error with list of available scenes
-6. Read `prompts.json` → check `_extends` field
+6. Read `prompts.json` → resolve `@file:` references (string fields starting with `@file:` → read referenced file relative to scene dir) → check `_extends` field
 7. **Inheritance Resolution** (if `_extends` is not null):
    a. Read parent scene name from `_extends`
    b. Locate parent scene (same priority: local > builtin)

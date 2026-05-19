@@ -12,6 +12,7 @@ Diverge — externalize chaos, discover directions.
    - First: `{cwd}/.persona/scenes/{name}/`
    - Fallback: `{repo_path}/scenes/{name}/`
 4. Read `prompts.json` → resolve inheritance if `_extends` is set (rules in CLAUDE.md "场景继承" section)
+   - Resolve `@file:` references: if any string field starts with `@file:`, read the referenced file (path relative to scene dir) and use its content as the field value. If file not found → error: "@file 引用找不到：{path}"
    - Extract `_um`, `_profile`, `_memory`, `_actions` from resolved/merged result
 5. Read `{cwd}/.persona/contexts/{scene}.md` → inject context variables
 6. Read `{cwd}/.persona/profile.md` → inject global persona
