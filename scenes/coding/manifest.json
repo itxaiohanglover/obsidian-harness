@@ -1,9 +1,13 @@
 {
   "scene": "coding",
-  "description": "编码文档 — 项目笔记、开发日志、会议纪要、代码文档、架构可视化",
+  "description": "编码文档 — 项目笔记、架构决策、开发日志、代码文档、可视化",
   "requires": {
-    "skills": ["obsidian-markdown", "obsidian-cli", "json-canvas", "mermaid-visualizer", "excalidraw-diagram", "obsidian-canvas-creator"],
+    "skills": ["obsidian-markdown", "obsidian-cli", "mermaid-visualizer"],
     "mcp": [],
-    "plugins": []
+    "plugins": ["obsidian-git"]
+  },
+  "recommended": {
+    "skills": ["json-canvas", "excalidraw-diagram"],
+    "plugins": ["kanban", "calendar", "homepage", "templater"]
   }
 }

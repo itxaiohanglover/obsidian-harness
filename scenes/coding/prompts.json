@@ -12,19 +12,20 @@
   },
   "_extends": null,
   "_profile": "",
-  "_um": "发散模式 — 面向编码项目的混乱外化。\n\n## 无输入时\n扫描 vault + 当前 git 仓库，发现方向：\n1. 检查最近 git commits 是否有对应的文档更新\n2. 找过时的项目笔记（status: active 但 > 14 天未更新）\n3. 检查未归档的会议纪要中的 action items\n4. 呈现 2-3 个方向让用户选择\n\n## 有输入时\n- 项目名 → 分析项目笔记完整性（README、API docs、changelog）\n- \"文档\" → 扫描代码变更，建议需要更新的文档\n- 代码模块名 → 创建或更新该模块的技术文档\n- 文本块 → 结构化为技术方案文档\n\n## 规则\n- 代码文档优先用 Mermaid 画架构图\n- 项目笔记按 module/component 组织\n- 会议纪要的 action items 用 - [ ] 追踪\n- 先诊断再行动",
-  "_aha": "收敛模式 — 面向编码项目的进度汇总。\n\n## 无输入时\n1. 扫描最近 24h 修改的项目笔记和 daily notes\n2. 读取 git log（如果在 git 仓库中）\n3. 一句话总结：代码进展 + 文档状态\n4. 建议下一步：缺什么文档、哪个 action item 该跟进\n\n## 有输入时\n- 项目名 → 项目状态报告（done/pending/risk）\n- \"dev log\" → 从 git history 生成开发日志\n- 时间范围 → 总结该时段的编码产出和文档变更\n\n## 规则\n- 如果检测到代码变更无对应文档更新，主动提醒\n- 未完成的 action items 高亮展示\n- 快速简洁，像 standup meeting",
+  "_um": "发散模式 — 面向编码项目的混乱外化。\n\n## 分层 Review 原则\n\n执行任何 action 时，严格按 review_level 控制暴露给用户的信息量：\n- L0 (自处理): 静默完成，不输出结果，下次 /aha 时一句话提及\n- L1 (通知): 一句话摘要，用户扫一眼即可\n- L2 (确认): 展示关键结构/变更，等用户点头\n- L3 (决策): 呈现选项和分析，等用户做选择\n\n## 无输入时\n扫描 vault + 当前 git 仓库，发现方向：\n1. 检查最近 git commits 是否有对应的文档更新（L1 通知缺失）\n2. 找过时的项目笔记（status: active 但 > 14 天未更新）\n3. 检查未关闭的 action items（- [ ] 标记）\n4. 呈现 2-3 个方向让用户选择（L3 决策）\n\n## 有输入时\n- 项目名 → 分析项目笔记完整性（文档覆盖率），L2 确认\n- \"架构\" → 分析代码结构生成架构图，L2 确认\n- \"决策\" + 问题 → 列出方案对比，L3 决策\n- \"文档\" → 扫描代码变更建议需更新的文档，L1 通知\n- 文本块 → 结构化为技术方案文档，L2 确认\n\n## 规则\n- 不要一次性输出所有细节，按 Review Level 控制信息密度\n- L0/L1 操作可以批量静默执行后汇总\n- L2/L3 操作必须逐个暴露，等待用户反馈\n- 代码文档优先用 Mermaid 画架构图\n- 先诊断再行动",
+  "_aha": "收敛模式 — 面向编码项目的进度汇总。\n\n## 分层 Review 汇报\n\n输出按信息重要度分层，用户从上往下扫，随时可以停：\n\n\n\n## 无输入时\n1. 扫描最近 24h-7d 的变更（git commits + 笔记修改）\n2. 一句话总结：代码进展 + 文档状态\n3. Done / In Progress / Blocked 三段式\n4. 如果有 L3 级别的未决决策，高亮提醒\n5. 汇总 L0 已自动完成的事项（digest 了几篇、归档了什么）\n6. 建议下一步：最高杠杆的 1 件事\n\n## 有输入时\n- 项目名 → 项目状态报告（完成度/风险/文档欠债）\n- \"dev log\" → 从 git history 生成开发日志（L1）\n- 时间范围 → 总结该时段的编码产出\n\n## 规则\n- 如果检测到代码变更无对应文档更新，L1 提醒\n- 未完成的 action items 高亮展示\n- 未决的 ADR 用 L3 标记提醒\n- 快速简洁，像异步 standup",
   "_memory": [],
   "_actions": {
     "project-note": {
-      "description": "创建结构化项目笔记",
+      "description": "创建/更新项目概览笔记",
       "trigger": [
         "项目笔记",
         "project",
         "project note",
         "新项目"
       ],
-      "prompt": "创建项目笔记：\n1. 询问项目名（或从 context 推断）\n2. 创建 {Project Name}.md，含 frontmatter(status: active, created, tags:[project])\n3. 结构：## Goals + ## Architecture + ## Tasks + ## Resources\n4. 如果在 git 仓库中，自动填充基础信息（remote url、最近 commits）\n5. 链接到相关 index note"
+      "review_level": 2,
+      "prompt": "创建或更新项目笔记：\n1. 询问项目名（或从 context/git 推断）\n2. 创建 {Project Name}.md，含 frontmatter(status: active, created, tags:[project])\n3. 结构：## Goals + ## Architecture + ## Tasks + ## Decisions + ## Resources\n4. 如果在 git 仓库中，自动填充基础信息（remote url、最近 commits）\n5. 链接到相关笔记\n\nReview Level 2: 创建后展示结构让用户确认"
     },
     "dev-log": {
       "description": "从 git 历史生成开发日志",
@@ -34,93 +35,82 @@
         "git log",
         "提交记录"
       ],
-      "prompt": "生成开发日志：\n1. 运行 git log --since='yesterday' --oneline（或用户指定时间范围）\n2. 按主题聚类 commits\n3. 生成 {Project} Dev Log.md 或追加到已有文件\n4. 格式：日期段 + commit 摘要 + 主题归类\n5. 链接到对应项目笔记 [[Project Name]]"
-    },
-    "meeting": {
-      "description": "创建会议纪要",
-      "trigger": [
-        "会议",
-        "meeting",
-        "会议纪要",
-        "meeting notes"
-      ],
-      "prompt": "创建会议纪要：\n1. 文件名：{YYYY-MM-DD} {Meeting Topic}.md\n2. Frontmatter: created, tags:[meeting], project\n3. 结构：## Attendees + ## Agenda + ## Decisions（用 > [!decision] callout）+ ## Action Items（- [ ] owner: due）+ ## Next Meeting\n4. Action items 链接到对应项目笔记"
+      "review_level": 1,
+      "prompt": "生成开发日志：\n1. 运行 git log --since=yesterday --oneline（或用户指定范围）\n2. 按主题聚类 commits\n3. 生成或追加到 Dev Log.md\n4. 格式：日期段 + commit 摘要 + 主题归类\n5. 链接到对应项目笔记\n\nReview Level 1: 生成后一句话通知「已生成本周日志（N commits → M 主题）」"
     },
     "architecture": {
-      "description": "生成架构文档（含 Mermaid 图）",
+      "description": "生成/更新架构文档（含 Mermaid 图）",
       "trigger": [
         "架构",
         "architecture",
         "架构图",
         "系统设计"
       ],
-      "prompt": "生成架构文档：\n1. 分析项目结构（目录树、入口文件、核心模块）\n2. 用 Mermaid 画模块关系图（flowchart 或 classDiagram）\n3. 每个模块一段说明：职责、对外接口、依赖\n4. 输出为 {Project} Architecture.md"
+      "review_level": 2,
+      "prompt": "生成架构文档：\n1. 分析项目结构（目录树、入口文件、核心模块）\n2. 用 Mermaid 画模块关系图（flowchart 或 classDiagram）\n3. 每个模块一段说明：职责、对外接口、依赖\n4. 输出为 Architecture.md\n\nReview Level 2: 展示架构图和模块列表让用户确认准确性"
     },
-    "canvas-map": {
-      "description": "生成项目可视化 Canvas（模块关系图）",
+    "decision": {
+      "description": "记录架构决策（ADR）",
       "trigger": [
-        "canvas",
-        "画布",
-        "visual map",
-        "模块图"
+        "决策",
+        "decision",
+        "ADR",
+        "为什么",
+        "选择"
       ],
-      "prompt": "生成项目 Canvas 可视化：\n1. 分析项目模块（从架构文档或目录结构推断）\n2. 创建 {Project} Map.canvas 文件\n3. 每个模块一个节点：type=text, 内容为模块名+一句话职责\n4. 节点颜色约定：active=color \"4\"(绿), paused=color \"2\"(黄), completed=color \"5\"(灰)\n5. 模块间依赖用 edge 连接，箭头方向=调用方向\n6. 布局：核心模块居中，辅助模块环绕，间距 200px\n7. 生成 16 字符 hex ID，确保唯一\n8. 如果 canvas 已存在，读取后增量更新而非覆盖"
+      "review_level": 3,
+      "prompt": "记录架构决策（ADR）：\n1. 识别决策点（用户提出的问题/检测到的设计分歧）\n2. 列出可选方案（至少2个）\n3. 每个方案：优势/劣势/适用场景\n4. **暴露给用户选择**（Review Level 3）\n5. 用户选择后记录到 Decisions/{日期}-{决策标题}.md\n6. 格式：## 背景 + ## 方案对比(表格) + ## 决策 + ## 后果\n7. 链接到项目笔记和相关架构文档\n\nReview Level 3: 这是人类必须做的决策，AI 只负责呈现选项和分析"
+    },
+    "document": {
+      "description": "代码文档化（API/README/Changelog）",
+      "trigger": [
+        "文档",
+        "document",
+        "readme",
+        "api",
+        "changelog",
+        "文档化"
+      ],
+      "review_level": 1,
+      "prompt": "代码文档化：\n1. 检测目标（用户指定 or 自动发现过期文档）：\n   - README → 检查是否反映当前项目状态\n   - API docs → 从代码注释/类型生成\n   - Changelog → 从 git log 生成版本变更记录\n2. 生成或更新对应文档\n3. 确保代码变更和文档同步\n4. 标注哪些部分是自动生成的、哪些需要人工补充\n\nReview Level 1: 通知「已更新 README（+3 段 / -1 过期段）」，不需要逐字确认"
+    },
+    "standup": {
+      "description": "项目状态回顾 + 下一步建议",
+      "trigger": [
+        "站会",
+        "standup",
+        "状态",
+        "进度",
+        "回顾"
+      ],
+      "review_level": 1,
+      "prompt": "项目状态回顾（异步站会）：\n1. 扫描最近 24h-7d 的变更（git commits + 笔记修改）\n2. 输出三段式：\n   - **Done**: 完成了什么（按主题聚合）\n   - **In Progress**: 正在进行什么（有对应分支/笔记）\n   - **Blocked/Next**: 阻塞项 or 建议下一步\n3. 检查 action items（- [ ] 标记的未完成项）\n4. 如果有文档欠债（代码改了文档没更新），主动提醒\n\nReview Level 1: 一屏可扫完，用户只需要看 Blocked 部分决定是否处理"
     },
     "visualize": {
-      "description": "可视化（自动选择最佳工具：Mermaid/Canvas/Excalidraw）",
+      "description": "统一可视化（自动选择 Mermaid/Canvas/Excalidraw）",
       "trigger": [
         "可视化",
         "画图",
         "图表",
         "diagram",
         "visualize",
-        "画个图"
-      ],
-      "prompt": "根据需求自动选择可视化工具：\n\n## 选择逻辑\n- 需要在 Obsidian 中拖拽编辑、节点可链接笔记 → Canvas（obsidian-canvas-creator）\n- 需要正式的结构化图表（流程图/时序图/类图/状态图）→ Mermaid（mermaid-visualizer）\n- 需要手绘风格、做演示分享、或动画展示 → Excalidraw（excalidraw-diagram）\n\n## 执行\n1. 分析用户需求，选择最合适的工具\n2. 如果不确定，简短询问：\"要正式的结构图(Mermaid)、可编辑白板(Canvas)、还是手绘风格(Excalidraw)？\"\n3. 按所选工具生成对应格式的文件\n4. Canvas → .canvas 文件；Mermaid → 嵌入 md 代码块；Excalidraw → .excalidraw 文件\n5. 输出完成后提示用户在 Obsidian 中打开查看"
-    },
-    "excalidraw": {
-      "description": "生成 Excalidraw 手绘风格图表",
-      "trigger": [
+        "canvas",
         "excalidraw",
-        "手绘",
-        "手绘图",
-        "sketch",
-        "手绘风格"
+        "手绘"
       ],
-      "prompt": "生成 Excalidraw 手绘风格图表：\n1. 分析用户需求（流程图/思维导图/架构图/时间线/层级图）\n2. 使用 excalidraw-diagram skill 生成 .excalidraw 文件\n3. 支持三种输出模式（默认用 Obsidian 模式）：\n   - Obsidian 模式：直接在库里打开编辑\n   - 标准模式：可在 excalidraw.com 编辑\n   - 动画模式：内容按步骤逐个出现（分享/复盘用）\n4. 节点内容使用中文标签\n5. 文件保存到 Excalidraw/ 文件夹（如果存在）\n6. 在当前笔记中嵌入：![[{filename}.excalidraw]]"
-    },
-    "publish": {
-      "description": "将文档发布到飞书/云端知识库",
-      "trigger": [
-        "发布",
-        "publish",
-        "飞书",
-        "feishu",
-        "推送",
-        "push"
-      ],
-      "prompt": "发布文档到云端：\n1. 读取用户指定的本地笔记（或当前打开的笔记）\n2. 检查 markdown 格式兼容性（飞书不支持的语法）：\n   - 分隔线 --- 前必须空行（否则变标题）\n   - blockquote 内不能嵌套有序列表\n   - 代码块 ``` 前后必须空行\n   - 段落间必须空行（否则连写）\n3. 自动修正不兼容语法\n4. 如果安装了飞书 CLI：通过 lark-cli docs +create 推送\n5. 如果没有 CLI：输出修正后的内容，提示用户手动粘贴\n6. 报告：发布状态 + 修正了哪些格式问题"
-    },
-    "voice-note": {
-      "description": "整理语音输入的粗糙笔记",
-      "trigger": [
-        "语音",
-        "voice",
-        "口述",
-        "整理语音",
-        "语音笔记"
-      ],
-      "prompt": "整理语音输入笔记：\n1. 读取用户指定的语音转文字笔记（通常在 Inbox/）\n2. 识别内容类型：工作记录/灵感/会议/个人思考\n3. 优化处理：\n   - 去除口语词、语气词、重复表述\n   - 修正语音识别错误（根据上下文推断）\n   - 整理为结构化 Markdown（标题/列表/时间线）\n   - 保留原始时间戳信息\n4. 根据内容类型打标签和归档：\n   - 项目相关 → 对应项目笔记\n   - 灵感 → Ideas/\n   - 会议 → Meetings/\n5. 输出处理报告：原始字数 → 整理后字数 + 归档位置"
+      "review_level": 1,
+      "prompt": "根据需求自动选择可视化工具：\n\n## 选择逻辑\n- 正式结构图（流程/时序/类图/状态图）→ Mermaid\n- 可拖拽编辑、节点可链接笔记 → Canvas\n- 手绘风格、做演示分享 → Excalidraw\n\n## 执行\n1. 分析用户需求，选择最合适的工具\n2. 如果不确定，简短询问（Review Level 升为 2）\n3. 生成对应格式文件\n4. Canvas → .canvas；Mermaid → md 代码块；Excalidraw → .excalidraw\n\nReview Level 1: 生成后通知「已生成架构图(Mermaid)」，用户打开查看即可"
     },
     "digest": {
-      "description": "消化 Inbox 未整理素材",
+      "description": "消化技术素材（文章/代码片段/工具教程）",
       "trigger": [
         "消化",
         "digest",
-        "整理inbox",
+        "整理",
         "归档"
       ],
-      "prompt": "批量消化 Inbox：\n1. 扫描 Inbox/ 文件夹中未处理的文件\n2. 识别每篇素材属性：技术文章/代码片段/工具教程/项目资料\n3. 提取核心要点，生成摘要\n4. 归档到对应项目或分类目录\n5. 优化文件名，整理 Markdown 格式\n6. 保留原始来源链接和保存时间\n7. 输出处理报告：处理了 N 篇，归档到哪些目录"
+      "review_level": 0,
+      "prompt": "批量消化技术素材：\n1. 扫描 Inbox/ 中与编码相关的素材\n2. 识别类型：技术文章/代码片段/工具教程/架构参考\n3. 提取核心要点，生成摘要卡片\n4. 归档到对应项目或技术分类目录\n5. 保留来源链接和日期\n\nReview Level 0: 完全自动处理，下次 /aha 时一句话提及「消化了 N 篇技术素材」"
     }
   },
   "_loop_template": null,
