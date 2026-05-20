@@ -1,5 +1,9 @@
 # persona
 
+<p align="center">
+  <img src="assets/persona-architecture.png" alt="Persona architecture: distill your way of working into switchable AI personas" width="100%" />
+</p>
+
 > 你不是在配置工具。你是在蒸馏自己。
 
 知识工作者每天在不同角色间切换——写代码时你是工程师，整理笔记时你是策展人，写专利时你是发明人。每个角色有不同的思考方式、行动模式、审美偏好。
@@ -12,11 +16,9 @@
 
 ## 安装
 
-```bash
-git clone https://github.com/itxaiohanglover/obsidian-harness.git ~/.claude/persona && ~/.claude/persona/install.sh
-```
+把这句话复制给你的 AI Agent：
 
-> 前置条件：[Claude Code](https://docs.anthropic.com/en/docs/claude-code) 已安装。其余依赖使用时自动检测，缺什么 AI 会告诉你。
+> 请帮我安装 persona：克隆 `https://github.com/itxaiohanglover/obsidian-harness.git` 到 `~/.claude/persona`，然后执行 `~/.claude/persona/install.sh`；如果缺少依赖，请自动检查并告诉我下一步怎么处理。
 
 ---
 
